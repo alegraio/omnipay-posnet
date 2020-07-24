@@ -5,7 +5,7 @@
 
 namespace Omnipay\PosNet\Messages;
 
-class RefundResponse extends CompleteAuthorizeResponse
+class RefundResponse extends Response
 {
 
 }

@@ -6,10 +6,12 @@
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
+use Omnipay\Common\Message\ResponseInterface;
 
 class CompleteAuthorizeRequest extends AbstractRequest
 {
-    use ConstantTrait;
+
+    public $action = 'sale';
 
     /**
      * @return array|mixed
@@ -28,5 +30,19 @@ class CompleteAuthorizeRequest extends AbstractRequest
     protected function createResponse($data, $statusCode): CompleteAuthorizeResponse
     {
         return new CompleteAuthorizeResponse($this, $data, $statusCode);
+    }
+
+    /**
+     * @param mixed $data
+     * @return ResponseInterface|Response
+     */
+    public function sendData($data)
+    {
+        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
+            $this->getHeaders(),
+            $data);
+
+        $response = (string)$httpRequest->getBody()->getContents();
+        return new CompleteAuthorizeResponse($this, $response);
     }
 }

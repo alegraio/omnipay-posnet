@@ -6,11 +6,13 @@
 namespace Omnipay\PosNet\Messages;
 
 use Omnipay\Common\ItemBag;
+use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\PosNet\PosNetItemBag;
 
 class AuthorizeRequest extends AbstractRequest
 {
-    use ConstantTrait;
+
+    public $action = 'auth';
 
     /**
      * Set the items in this order
@@ -32,14 +34,19 @@ class AuthorizeRequest extends AbstractRequest
         return [];
     }
 
+
     /**
-     * @param $data
-     * @param $statusCode
-     * @return AuthorizeResponse
+     * @param mixed $data
+     * @return ResponseInterface|Response
      */
-    protected function createResponse($data, $statusCode): AuthorizeResponse
+    public function sendData($data)
     {
-        return new AuthorizeResponse($this, $data, $statusCode);
+        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
+            $this->getHeaders(),
+            $data);
+
+        $response = (string)$httpRequest->getBody()->getContents();
+        return new AuthorizeResponse($this, $response);
     }
 }
 

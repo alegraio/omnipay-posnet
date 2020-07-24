@@ -5,37 +5,8 @@
 
 namespace Omnipay\PosNet\Messages;
 
-use Omnipay\Common\Message\AbstractResponse;
-use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\Common\Message\RequestInterface;
 
-class CompleteAuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
+class CompleteAuthorizeResponse extends Response
 {
-    protected $statusCode;
 
-    public function __construct(RequestInterface $request, $data, $statusCode = 200)
-    {
-        parent::__construct($request, $data);
-        $this->statusCode = $statusCode;
-        $parsedXML = @simplexml_load_string($this->getData());
-        $content = json_decode(json_encode((array)$parsedXML, JSON_THROW_ON_ERROR, 512), true, 512, JSON_THROW_ON_ERROR);
-        $this->setData($content);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSuccessful(): bool
-    {
-        return !(1 !== $this->data['approved']);
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    public function setData(array $data): array
-    {
-        return $this->data = $data;
-    }
 }

@@ -6,10 +6,12 @@
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
+use Omnipay\Common\Message\ResponseInterface;
 
 class OrderTransactionRequest extends AbstractRequest
 {
-    use ConstantTrait;
+
+    public $action = 'sale';
 
     /**
      * @return array|mixed
@@ -28,5 +30,19 @@ class OrderTransactionRequest extends AbstractRequest
     protected function createResponse($data, $statusCode): OrderTransactionResponse
     {
         return new OrderTransactionResponse($this, $data, $statusCode);
+    }
+
+    /**
+     * @param mixed $data
+     * @return ResponseInterface|Response
+     */
+    public function sendData($data)
+    {
+        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
+            $this->getHeaders(),
+            $data);
+
+        $response = (string)$httpRequest->getBody()->getContents();
+        return new OrderTransactionResponse($this, $response);
     }
 }

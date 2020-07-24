@@ -6,10 +6,12 @@
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
+use Omnipay\Common\Message\ResponseInterface;
 
 class RefundRequest extends AbstractRequest
 {
-    use ConstantTrait;
+
+    public $action = 'return';
 
     /**
      * @return array|mixed
@@ -21,12 +23,16 @@ class RefundRequest extends AbstractRequest
     }
 
     /**
-     * @param $data
-     * @param $statusCode
-     * @return RefundResponse
+     * @param mixed $data
+     * @return ResponseInterface|Response
      */
-    protected function createResponse($data, $statusCode): RefundResponse
+    public function sendData($data)
     {
-        return new RefundResponse($this, $data, $statusCode);
+        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
+            $this->getHeaders(),
+            $data);
+
+        $response = (string)$httpRequest->getBody()->getContents();
+        return new RefundResponse($this, $response);
     }
 }

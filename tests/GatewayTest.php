@@ -17,6 +17,10 @@ class GatewayTest extends GatewayTestCase
     {
         /** @var PosNetGateway gateway */
         $this->gateway = new PosNetGateway(null, $this->getHttpRequest());
+        $this->gateway->setMerchantId('6706598320');
+        $this->gateway->setTerminalId('67005551');
+        $this->gateway->setPosNetId('9644');
+        $this->gateway->setXmlServiceUrl('https://setmpos.ykb.com/PosnetWebService/XML');
     }
 
     public function testPurchase(): void

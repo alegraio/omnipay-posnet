@@ -75,4 +75,44 @@ class PosNetGateway extends AbstractGateway
     {
         return $this->createRequest(OrderTransactionRequest::class, $parameters);
     }
+
+    public function setMerchantId(string $merchantId): PosNetGateway
+    {
+        return $this->setParameter('merchantId', $merchantId);
+    }
+
+    public function setTerminalId(string $terminalId): PosNetGateway
+    {
+        return $this->setParameter('terminalId', $terminalId);
+    }
+
+    public function setPosNetId(string $posNetId): PosNetGateway
+    {
+        return $this->setParameter('posNetId', $posNetId);
+    }
+
+    public function setXmlServiceUrl(string $xmlServiceUrl): PosNetGateway
+    {
+        return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
+    }
+
+    public function getMerchantId(): string
+    {
+        return $this->getParameter('merchantId');
+    }
+
+    public function getTerminalId(): string
+    {
+        return $this->getParameter('terminalId');
+    }
+
+    public function getPosNetId(): string
+    {
+        return $this->getParameter('posNetId');
+    }
+
+    public function getXmlServiceUrl(): string
+    {
+        return $this->getParameter('xmlServiceUrl');
+    }
 }
