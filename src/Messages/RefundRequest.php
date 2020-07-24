@@ -6,7 +6,6 @@
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
-use Omnipay\Common\Message\ResponseInterface;
 
 class RefundRequest extends AbstractRequest
 {
@@ -23,16 +22,53 @@ class RefundRequest extends AbstractRequest
     }
 
     /**
-     * @param mixed $data
-     * @return ResponseInterface|Response
+     * @param $data
+     * @param $statusCode
+     * @return RefundResponse
      */
-    public function sendData($data)
+    protected function createResponse($data, $statusCode): RefundResponse
     {
-        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
-            $this->getHeaders(),
-            $data);
+        return new RefundResponse($this, $data, $statusCode);
+    }
 
-        $response = (string)$httpRequest->getBody()->getContents();
-        return new RefundResponse($this, $response);
+    /**
+     * Set TranDateRequired value to include time value in response data.
+     *
+     * @param string $tranDateRequired
+     */
+    public function setTranDateRequired(string $tranDateRequired): void
+    {
+        $this->setParameter('tranDateRequired', $tranDateRequired);
+    }
+
+    /**
+     * Get TranDateRequired value.
+     *
+     * @return string
+     */
+    public function getTranDateRequired(): string
+    {
+        return $this->getParameter('tranDateRequired');
+    }
+
+
+    /**
+     * Set Return Data.
+     *
+     * @param array $return
+     */
+    public function setReturn(array $return): void
+    {
+        $this->setParameter('return', $return);
+    }
+
+    /**
+     * Get Return Data.
+     *
+     * @return array
+     */
+    public function getReturn(): array
+    {
+        return $this->getParameter('return');
     }
 }

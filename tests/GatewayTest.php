@@ -3,6 +3,7 @@
 namespace Omnipay\Tests;
 
 
+use Omnipay\PosNet\Messages\RefundResponse;
 use Omnipay\PosNet\PosNetGateway;
 
 class GatewayTest extends GatewayTestCase
@@ -12,6 +13,10 @@ class GatewayTest extends GatewayTestCase
 
     /** @var array */
     public $options;
+    /**
+     * @var array
+     */
+    private $parameters;
 
     public function setUp()
     {
@@ -35,7 +40,18 @@ class GatewayTest extends GatewayTestCase
 
     public function testRefund(): void
     {
-        $this->assertTrue(true);
+        $this->parameters = [
+            'tranDateRequired' => '1',
+            'return' => [
+                'amount' => 100,
+                'currencyCode' => 'TL',
+                'hostLogKey' => '019676067890000191'
+            ]
+        ];
+
+        /** @var RefundResponse $response */
+        $response = $this->gateway->refund($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
     }
 
     public function testOrderTransaction(): void

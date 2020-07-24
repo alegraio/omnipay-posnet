@@ -1,6 +1,6 @@
 <?php
 /**
- * PayU  Response
+ * PosNet  Response
  */
 
 namespace Omnipay\PosNet\Messages;

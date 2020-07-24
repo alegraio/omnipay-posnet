@@ -7,13 +7,11 @@ namespace Omnipay\PosNet\Messages;
 
 use Omnipay\Common\Message\ResponseInterface;
 
-
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
 
-    use HelperTrait;
+    use HelperTrait, BaseParametersTrait;
 
-    public const xmlServiceUrl = 'https://setmpos.ykb.com/PosnetWebService/XML';
     public const postParameterKey = 'xmldata';
 
     public function setItems($items): \Omnipay\Common\Message\AbstractRequest
@@ -21,21 +19,31 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return parent::setItems($items);
     }
 
-
-    public function getXmlServiceUrl(): string
-    {
-        return $this->getParameter('xmlServiceUrl') ?? self::xmlServiceUrl;
-    }
-
     public function getHeaders(): array
     {
         return [
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'X-MERCHANT-ID' => $this->getParameter('merchantId'),
-            'X-TERMINAL-ID' => $this->getParameter('terminalId'),
-            'X-POSNET-ID' => $this->getParameter('posNetId'),
+            'X-MERCHANT-ID' => $this->getMerchantId(),
+            'X-TERMINAL-ID' => $this->getTerminalId(),
+            'X-POSNET-ID' => $this->getPosNetId(),
             'X-CORRELATION-ID' => $this->getCorrelationId(),
         ];
+    }
+
+
+    /**
+     * @param mixed $data
+     * @return ResponseInterface|Response
+     */
+    public function sendData($data)
+    {
+        $body = http_build_query($data, '', '&');
+        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
+            $this->getHeaders(),
+            $body);
+
+        $response = (string)$httpRequest->getBody()->getContents();
+        return $this->createResponse($response, $httpRequest->getStatusCode());
     }
 
     /**

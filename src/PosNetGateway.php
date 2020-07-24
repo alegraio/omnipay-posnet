@@ -9,6 +9,7 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
+use Omnipay\PosNet\Messages\BaseParametersTrait;
 use Omnipay\PosNet\Messages\PurchaseRequest;
 use Omnipay\PosNet\Messages\CompleteAuthorizeRequest;
 use Omnipay\PosNet\Messages\RefundRequest;
@@ -28,6 +29,8 @@ use Omnipay\PosNet\Messages\OrderTransactionRequest;
  */
 class PosNetGateway extends AbstractGateway
 {
+
+    use BaseParametersTrait;
 
     /**
      * Get gateway display name
@@ -74,45 +77,5 @@ class PosNetGateway extends AbstractGateway
     public function orderTransaction(array $parameters = [])
     {
         return $this->createRequest(OrderTransactionRequest::class, $parameters);
-    }
-
-    public function setMerchantId(string $merchantId): PosNetGateway
-    {
-        return $this->setParameter('merchantId', $merchantId);
-    }
-
-    public function setTerminalId(string $terminalId): PosNetGateway
-    {
-        return $this->setParameter('terminalId', $terminalId);
-    }
-
-    public function setPosNetId(string $posNetId): PosNetGateway
-    {
-        return $this->setParameter('posNetId', $posNetId);
-    }
-
-    public function setXmlServiceUrl(string $xmlServiceUrl): PosNetGateway
-    {
-        return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
-    }
-
-    public function getMerchantId(): string
-    {
-        return $this->getParameter('merchantId');
-    }
-
-    public function getTerminalId(): string
-    {
-        return $this->getParameter('terminalId');
-    }
-
-    public function getPosNetId(): string
-    {
-        return $this->getParameter('posNetId');
-    }
-
-    public function getXmlServiceUrl(): string
-    {
-        return $this->getParameter('xmlServiceUrl');
     }
 }

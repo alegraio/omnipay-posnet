@@ -5,8 +5,6 @@
 
 namespace Omnipay\PosNet\Messages;
 
-use Omnipay\Common\Message\ResponseInterface;
-
 class PurchaseRequest extends AbstractRequest
 {
 
@@ -21,16 +19,12 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
-     * @param mixed $data
-     * @return ResponseInterface|Response
+     * @param $data
+     * @param $statusCode
+     * @return PurchaseResponse
      */
-    public function sendData($data)
+    protected function createResponse($data, $statusCode): PurchaseResponse
     {
-        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
-            $this->getHeaders(),
-            $data);
-
-        $response = (string)$httpRequest->getBody()->getContents();
-        return new PurchaseResponse($this, $response);
+        return new PurchaseResponse($this, $data, $statusCode);
     }
 }

@@ -6,7 +6,6 @@
 namespace Omnipay\PosNet\Messages;
 
 use Omnipay\Common\ItemBag;
-use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\PosNet\PosNetItemBag;
 
 class AuthorizeRequest extends AbstractRequest
@@ -36,17 +35,13 @@ class AuthorizeRequest extends AbstractRequest
 
 
     /**
-     * @param mixed $data
-     * @return ResponseInterface|Response
+     * @param $data
+     * @param $statusCode
+     * @return AuthorizeResponse
      */
-    public function sendData($data)
+    protected function createResponse($data, $statusCode): AuthorizeResponse
     {
-        $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
-            $this->getHeaders(),
-            $data);
-
-        $response = (string)$httpRequest->getBody()->getContents();
-        return new AuthorizeResponse($this, $response);
+        return new AuthorizeResponse($this, $data, $statusCode);
     }
 }
 
