@@ -3,6 +3,7 @@
 namespace Omnipay\Tests;
 
 
+use Omnipay\PosNet\Messages\PurchaseResponse;
 use Omnipay\PosNet\Messages\RefundResponse;
 use Omnipay\PosNet\PosNetGateway;
 
@@ -26,11 +27,36 @@ class GatewayTest extends GatewayTestCase
         $this->gateway->setTerminalId('67005551');
         $this->gateway->setPosNetId('9644');
         $this->gateway->setXmlServiceUrl('https://setmpos.ykb.com/PosnetWebService/XML');
+        $this->gateway->setCurrency('TL');
     }
 
     public function testPurchase(): void
     {
-        $this->assertTrue(true);
+        $paymentCard = [
+            'number' => '4506349116608409',
+            'expiryMonth' => '03',
+            'expiryYear' => '2024',
+            'cvv' => '000'
+
+        ];
+
+        $this->parameters = [
+            // 'mid' => $this->gateway->getMerchantId(),
+            // 'tid' => $this->gateway->getTerminalId(),
+            'tranDateRequired' => '1',
+            'amount' => 2451,
+            'orderID' => '1s3456z8901234567890123',
+            'installment' => '02',
+            'card' => $paymentCard
+            // 'koiCode' => '',
+            // 'subMrcId' => '',
+            // 'tckn' => '',
+            // 'vkn' => '',
+            // 'subDealerCode' => '',
+        ];
+        /** @var PurchaseResponse $response */
+        $response = $this->gateway->purchase($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
     }
 
     public function testCompleteAuthorize(): void

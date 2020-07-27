@@ -6,6 +6,7 @@
 namespace Omnipay\PosNet\Messages;
 
 use Omnipay\Common\Message\ResponseInterface;
+use SimpleXMLElement;
 
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
@@ -37,7 +38,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $body = http_build_query($data, '', '&');
+        $xml = new SimpleXMLElement('<posnetRequest/>');
+        array_walk_recursive($data, array ($xml, 'addChild'));
+        $bodyArr = [
+            $this::postParameterKey => urlencode($xml->asXml())
+        ];
+        $body = http_build_query($bodyArr, '', '&');
         $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
             $this->getHeaders(),
             $body);
