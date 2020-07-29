@@ -27,8 +27,8 @@ class PurchaseRequest extends AbstractRequest
                 'ccno' => $this->getCard()->getNumber(),
                 'currencyCode' => $this->getCurrency(),
                 'cvc' => $this->getCard()->getCvv(),
-                'expDate' => substr($this->getCard()->getExpiryYear(), -2) . $this->getCard()->getExpiryMonth(),
-                'orderId' => $this->getOrderID(),
+                'expDate' => $this->getExpDate(),
+                'orderID' => str_pad($this->getOrderID(), 24, '0', STR_PAD_LEFT),
                 'installment' => $this->getInstallment()
             ]
 
@@ -67,12 +67,12 @@ class PurchaseRequest extends AbstractRequest
 
     public function getOrderID(): string
     {
-        return $this->getParameter('orderId');
+        return $this->getParameter('orderID');
     }
 
     public function setOrderId(string $orderId): PurchaseRequest
     {
-        return $this->setParameter('orderId', $orderId);
+        return $this->setParameter('orderID', $orderId);
     }
 
     public function getInstallment(): string
@@ -83,5 +83,10 @@ class PurchaseRequest extends AbstractRequest
     public function setInstallment(string $installment): PurchaseRequest
     {
         return $this->setParameter('installment', $installment);
+    }
+
+    private function getExpDate(): string
+    {
+        return $this->getCard()->getExpiryDate('ym');
     }
 }

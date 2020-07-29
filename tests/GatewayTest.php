@@ -45,7 +45,7 @@ class GatewayTest extends GatewayTestCase
             // 'tid' => $this->gateway->getTerminalId(),
             'tranDateRequired' => '1',
             'amount' => 2451,
-            'orderID' => '1s3456z8901234567890123',
+            'orderID' => '1s3456z89012345678901234',
             'installment' => '02',
             'card' => $paymentCard
             // 'koiCode' => '',

@@ -23,7 +23,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function getHeaders(): array
     {
         return [
-            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
             'X-MERCHANT-ID' => $this->getMerchantId(),
             'X-TERMINAL-ID' => $this->getTerminalId(),
             'X-POSNET-ID' => $this->getPosNetId(),
@@ -39,9 +39,13 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function sendData($data)
     {
         $xml = new SimpleXMLElement('<posnetRequest/>');
-        array_walk_recursive($data, array ($xml, 'addChild'));
+        $this->convertArrayToXml($data, $xml);
+        $xmlStr = $xml->asXml();
+        $xmlStr = preg_replace( "/<\?xml.+?\?>/", '', $xmlStr);
+        $xmlStr = mb_convert_encoding($xmlStr, 'UTF-8');
+
         $bodyArr = [
-            $this::postParameterKey => urlencode($xml->asXml())
+            $this::postParameterKey => $xmlStr
         ];
         $body = http_build_query($bodyArr, '', '&');
         $httpRequest = $this->httpClient->request($this->getHttpMethod(), $this->getXmlServiceUrl(),
