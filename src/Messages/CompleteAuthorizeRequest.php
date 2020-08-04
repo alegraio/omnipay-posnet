@@ -25,6 +25,7 @@ class CompleteAuthorizeRequest extends AbstractRequest
      * @param $data
      * @param $statusCode
      * @return CompleteAuthorizeResponse
+     * @throws Exception
      */
     protected function createResponse($data, $statusCode): CompleteAuthorizeResponse
     {

@@ -5,20 +5,32 @@
 
 namespace Omnipay\PosNet\Messages;
 
+use Exception;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Common\Message\RequestInterface;
+use RuntimeException;
 
 class Response extends AbstractResponse implements RedirectResponseInterface
 {
     protected $statusCode;
 
+    /**
+     * Response constructor.
+     * @param RequestInterface $request
+     * @param $data
+     * @param int $statusCode
+     * @throws Exception
+     */
     public function __construct(RequestInterface $request, $data, $statusCode = 200)
     {
         parent::__construct($request, $data);
         $this->statusCode = $statusCode;
         $parsedXML = @simplexml_load_string($this->getData());
-        $content = json_decode(json_encode((array)$parsedXML, JSON_THROW_ON_ERROR, 512), true, 512, JSON_THROW_ON_ERROR);
+        $content = json_decode(json_encode((array)$parsedXML), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new RuntimeException('Could not resolve xml response to array');
+        }
         $this->setData($content);
     }
 
@@ -28,7 +40,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     public function isSuccessful(): bool
     {
 
-        return !(1 !== $this->data['approved']);
+        return !(1 !== (int)$this->data['approved']);
     }
 
     public function getCode(): int

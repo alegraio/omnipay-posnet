@@ -9,6 +9,7 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
+use Omnipay\PosNet\Messages\AuthorizeRequest;
 use Omnipay\PosNet\Messages\BaseParametersTrait;
 use Omnipay\PosNet\Messages\PurchaseRequest;
 use Omnipay\PosNet\Messages\CompleteAuthorizeRequest;
@@ -17,7 +18,6 @@ use Omnipay\PosNet\Messages\OrderTransactionRequest;
 
 
 /**
- * @method RequestInterface authorize(array $options = array())
  * @method RequestInterface capture(array $options = array())
  * @method RequestInterface completePurchase(array $options = array())
  * @method RequestInterface void(array $options = array())
@@ -41,6 +41,15 @@ class PosNetGateway extends AbstractGateway
     public function getName(): string
     {
         return 'PosNet';
+    }
+
+    /**
+     * @param array $parameters
+     * @return AbstractRequest|RequestInterface
+     */
+    public function authorize(array $parameters = [])
+    {
+        return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
 
     /**

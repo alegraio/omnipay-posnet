@@ -25,6 +25,7 @@ class OrderTransactionRequest extends AbstractRequest
      * @param $data
      * @param $statusCode
      * @return OrderTransactionResponse
+     * @throws Exception
      */
     protected function createResponse($data, $statusCode): OrderTransactionResponse
     {

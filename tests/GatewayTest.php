@@ -3,12 +3,16 @@
 namespace Omnipay\Tests;
 
 
+use Omnipay\PosNet\Messages\AuthorizeResponse;
+use Omnipay\PosNet\Messages\HelperTrait;
 use Omnipay\PosNet\Messages\PurchaseResponse;
 use Omnipay\PosNet\Messages\RefundResponse;
 use Omnipay\PosNet\PosNetGateway;
 
 class GatewayTest extends GatewayTestCase
 {
+    use HelperTrait;
+
     /** @var PosNetGateway */
     public $gateway;
 
@@ -23,20 +27,46 @@ class GatewayTest extends GatewayTestCase
     {
         /** @var PosNetGateway gateway */
         $this->gateway = new PosNetGateway(null, $this->getHttpRequest());
-        $this->gateway->setMerchantId('6706598320');
-        $this->gateway->setTerminalId('67005551');
-        $this->gateway->setPosNetId('9644');
-        $this->gateway->setXmlServiceUrl('https://setmpos.ykb.com/PosnetWebService/XML');
+        $this->gateway->setMerchantId(getenv('MERCHANT_ID'));
+        $this->gateway->setTerminalId(getenv('TERMINAL_ID'));
+        $this->gateway->setPosNetId(getenv('POSNET_ID'));
+        $this->gateway->setTestMode(true);
         $this->gateway->setCurrency('TL');
     }
 
-    public function testPurchase(): void
+    public function testAuthorize(): void
     {
         $paymentCard = [
             'number' => '4506349116608409',
             'expiryMonth' => '03',
             'expiryYear' => '2024',
-            'cvv' => '000'
+            'cvv' => '000',
+            'billingFirstName' => 'john',
+            'billingLastName' => 'doe'
+
+        ];
+
+        $this->parameters = [
+            // 'mid' => $this->gateway->getMerchantId(),
+            // 'tid' => $this->gateway->getTerminalId(),
+            'tranType' => 'Sale',
+            'amount' => 3600,
+            'orderID' => 'YKB_0000080603143050',
+            'installment' => '00',
+            'card' => $paymentCard
+        ];
+        /** @var AuthorizeResponse $response */
+        $response = $this->gateway->authorize($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
+    }
+
+    public function testPurchase(): void
+    {
+        $paymentCard = [
+            'number' => '5170410000000004',
+            'expiryMonth' => '12',
+            'expiryYear' => '2030',
+            'cvv' => '123'
 
         ];
 
@@ -45,8 +75,8 @@ class GatewayTest extends GatewayTestCase
             // 'tid' => $this->gateway->getTerminalId(),
             'tranDateRequired' => '1',
             'amount' => 2451,
-            'orderID' => '1s3456z89012345678901234',
-            'installment' => '02',
+            'orderID' => $this->getRandomString(24),
+            'installment' => '00',
             'card' => $paymentCard
             // 'koiCode' => '',
             // 'subMrcId' => '',
@@ -68,11 +98,8 @@ class GatewayTest extends GatewayTestCase
     {
         $this->parameters = [
             'tranDateRequired' => '1',
-            'return' => [
-                'amount' => 100,
-                'currencyCode' => 'TL',
-                'hostLogKey' => '019676067890000191'
-            ]
+            'amount' => 2000,
+            'hostLogKey' => '026961487790000201'
         ];
 
         /** @var RefundResponse $response */

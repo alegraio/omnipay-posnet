@@ -18,13 +18,30 @@ class RefundRequest extends AbstractRequest
      */
     public function getData()
     {
-        return [];
+        $data = [
+            'mid' => $this->getMerchantId(),
+            'tid' => $this->getTerminalId(),
+            'tranDateRequired' => $this->getTranDateRequired(),
+            $this->action => [
+                'amount' => $this->getAmount(),
+                'currencyCode' => $this->getCurrency()
+            ]
+        ];
+        if ($this->getHostLogKey() !== null) {
+            $data[$this->action]['hostLogKey'] = $this->getHostLogKey();
+            return $data;
+        }
+        if ($this->getOrderID() !== null) {
+            $data[$this->action]['orderID'] = $this->getOrderID();
+        }
+        return $data;
     }
 
     /**
      * @param $data
      * @param $statusCode
      * @return RefundResponse
+     * @throws Exception
      */
     protected function createResponse($data, $statusCode): RefundResponse
     {
@@ -49,26 +66,5 @@ class RefundRequest extends AbstractRequest
     public function getTranDateRequired(): string
     {
         return $this->getParameter('tranDateRequired');
-    }
-
-
-    /**
-     * Set Return Data.
-     *
-     * @param array $return
-     */
-    public function setReturn(array $return): void
-    {
-        $this->setParameter('return', $return);
-    }
-
-    /**
-     * Get Return Data.
-     *
-     * @return array
-     */
-    public function getReturn(): array
-    {
-        return $this->getParameter('return');
     }
 }
