@@ -54,6 +54,11 @@ trait BaseParametersTrait
         return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
     }
 
+    public function getThreeDServiceUrl(): string
+    {
+        return ($this->parameters['testMode']) ? $this->xmlServiceUrls['test3d'] : $this->xmlServiceUrls['3d'];
+    }
+
     public function getOrderID(): ?string
     {
         return $this->getParameter('orderID');
@@ -107,5 +112,25 @@ trait BaseParametersTrait
     public function setHostLogKey($hostLogKey)
     {
         return $this->setParameter('hostLogKey', $hostLogKey);
+    }
+
+    public function getMerchantReturnUrl(): ?string
+    {
+        return $this->getParameter('merchantReturnUrl');
+    }
+
+    public function setMerchantReturnUrl($merchantReturnUrl)
+    {
+        return $this->setParameter('merchantReturnUrl', $merchantReturnUrl);
+    }
+
+    public function getWebsiteUrl(): ?string
+    {
+        return $this->getParameter('websiteUrl');
+    }
+
+    public function setWebsiteUrl($websiteUrl)
+    {
+        return $this->setParameter('websiteUrl', $websiteUrl);
     }
 }

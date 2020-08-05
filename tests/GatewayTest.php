@@ -53,10 +53,43 @@ class GatewayTest extends GatewayTestCase
             'amount' => 3600,
             'orderID' => 'YKB_0000080603143050',
             'installment' => '00',
-            'card' => $paymentCard
+            'card' => $paymentCard,
+            'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
+            'websiteUrl' => 'https://omnipay.com'
         ];
         /** @var AuthorizeResponse $response */
         $response = $this->gateway->authorize($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
+    }
+
+    public function testThreeDSForm(): void
+    {
+        $paymentCard = [
+            'number' => '4506349116608409',
+            'expiryMonth' => '03',
+            'expiryYear' => '2024',
+            'cvv' => '000',
+            'billingFirstName' => 'john',
+            'billingLastName' => 'doe'
+
+        ];
+
+        $this->parameters = [
+            // 'mid' => $this->gateway->getMerchantId(),
+            // 'tid' => $this->gateway->getTerminalId(),
+            'tranType' => 'Sale',
+            'amount' => 3600,
+            'orderID' => 'YKB_0000080603143050',
+            'installment' => '00',
+            'card' => $paymentCard,
+            'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
+            'websiteUrl' => 'https://omnipay.com'
+        ];
+        /** @var AuthorizeResponse $response */
+        $response = $this->gateway->authorize($this->parameters)->send();
+        if ($response->isSuccessful()) {
+            $this->assertNotEmpty($response->getThreeDSFormHtml());
+        }
         $this->assertTrue($response->isSuccessful());
     }
 
