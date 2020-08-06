@@ -11,21 +11,23 @@ use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\PosNet\Messages\AuthorizeRequest;
 use Omnipay\PosNet\Messages\BaseParametersTrait;
+use Omnipay\PosNet\Messages\MacValidationException;
+use Omnipay\PosNet\Messages\MacValidationRequest;
 use Omnipay\PosNet\Messages\PurchaseRequest;
-use Omnipay\PosNet\Messages\CompleteAuthorizeRequest;
+use Omnipay\PosNet\Messages\CompletePurchaseRequest;
 use Omnipay\PosNet\Messages\RefundRequest;
 use Omnipay\PosNet\Messages\OrderTransactionRequest;
 
 
 /**
  * @method RequestInterface capture(array $options = array())
- * @method RequestInterface completePurchase(array $options = array())
  * @method RequestInterface void(array $options = array())
  * @method RequestInterface createCard(array $options = array())
  * @method RequestInterface updateCard(array $options = array())
  * @method RequestInterface deleteCard(array $options = array())
  * @method NotificationInterface acceptNotification(array $options = array())
  * @method RequestInterface fetchTransaction(array $options = [])
+ * @method RequestInterface completeAuthorize(array $options = array())
  */
 class PosNetGateway extends AbstractGateway
 {
@@ -58,16 +60,28 @@ class PosNetGateway extends AbstractGateway
      */
     public function purchase(array $parameters = [])
     {
+        $i = $parameters['paymentType'] ?? null;
+        if ($i === '3d') {
+            return $this->createRequest(AuthorizeRequest::class, $parameters);
+        }
+
         return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 
     /**
      * @param array $parameters
      * @return AbstractRequest|RequestInterface
+     * @throws MacValidationException
      */
-    public function completeAuthorize(array $parameters = [])
+    public function completePurchase(array $parameters = [])
     {
-        return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
+        $macValidationResponse = $this->createRequest(MacValidationRequest::class, $parameters)->send();
+        if ($macValidationResponse->isSuccessful()) {
+            return $this->createRequest(CompletePurchaseRequest::class, $parameters);
+        }
+
+        throw new MacValidationException(json_encode($macValidationResponse->getData()));
+
     }
 
     /**

@@ -2,91 +2,92 @@
 <head>
     <meta charset="utf-8">
     <title></title>
-    <script type="text/javascript">
-        // JavaScript Document
-        function submitForm(Form, OpenNewWindowFlag, WindowName) {
+    <script type="text/javascript">             // JavaScript Document
+    function submitForm(Form, OpenNewWindowFlag, WindowName) {
 
-            var isURLExist = false;
-            var isNewWindowExist = false;
+        var isURLExist = false;
+        var isNewWindowExist = false;
 
-            if (document.all || document.getElementById) {
-                for (i = 0; i < Form.length; i++) {
-                    var tempobj = Form.elements[i];
+        if (document.all || document.getElementById) {
+            for (i = 0; i < Form.length; i++) {
+                var tempobj = Form.elements[i];
 
-                    if (tempobj.name.toLowerCase() == "url") {
-                        Form.url.value = location.href;
-                        isURLExist = true;
-                    }
+                if (tempobj.name.toLowerCase() == "url") {
+                    Form.url.value = location.href;
+                    isURLExist = true;
+                }
 
-                    if (OpenNewWindowFlag & tempobj.name == "openANewWindow") {
-                        tempobj.value = "1";
-                        isNewWindowExist = true;
-                    } else if (tempobj.name == "openANewWindow") {
-                        tempobj.value = "0";
-                        isNewWindowExist = true;
-                    }
+                if (OpenNewWindowFlag & tempobj.name == "openANewWindow") {
+                    tempobj.value = "1";
+                    isNewWindowExist = true;
+                } else if (tempobj.name == "openANewWindow") {
+                    tempobj.value = "0";
+                    isNewWindowExist = true;
                 }
             }
-
-            if (!isURLExist) {
-                el = document.createElement("input");
-                el.name = "url";
-                el.type = "hidden";
-                el.value = location.href;
-                el = Form.appendChild(el);
-            }
-
-            if (!isNewWindowExist) {
-                el2 = document.createElement("input");
-                el2.name = "openANewWindow";
-                el2.type = "hidden";
-                if (OpenNewWindowFlag)
-                    el2.value = "1";
-                else
-                    el2.value = "0";
-                el2 = Form.appendChild(el2);
-            }
-
-            if (OpenNewWindowFlag) {
-                window.name = "merchantWindow";
-                openWindow(WindowName, 650, 600);
-            } else
-                window.name = "YKBWindow";
         }
 
-        function openWindow(WindowName, width, height) {
-            x = (640 - width) / 2, y = (480 - height) / 2;
-
-            if (screen) {
-                y = (screen.availHeight - height - 70) / 2;
-                x = (screen.availWidth - width) / 2;
-            }
-
-            window.open('', WindowName, 'width=' + width + ',height=' + height + ',screenX=' + x + ',screenY=' + y + ',top=' + y + ',left=' + x + ',status=yes,location=yes,resizable=no,scrollbars=yes');
+        if (!isURLExist) {
+            el = document.createElement("input");
+            el.name = "url";
+            el.type = "hidden";
+            el.value = location.href;
+            el = Form.appendChild(el);
         }
 
-        function submitFormEx(Form, OpenNewWindowFlag, WindowName) {
-            submitForm(Form, OpenNewWindowFlag, WindowName)
-            Form.submit();
+        if (!isNewWindowExist) {
+            el2 = document.createElement("input");
+            el2.name = "openANewWindow";
+            el2.type = "hidden";
+            if (OpenNewWindowFlag)
+                el2.value = "1";
+            else
+                el2.value = "0";
+            el2 = Form.appendChild(el2);
         }
 
-        submitFormEx(posnetForm, 0, 'YKBWindow');
-    </script>
+        if (OpenNewWindowFlag) {
+            window.name = "merchantWindow";
+            openWindow(WindowName, 650, 600);
+        } else
+            window.name = "YKBWindow";
+    }
+
+    function openWindow(WindowName, width, height) {
+        x = (640 - width) / 2, y = (480 - height) / 2;
+
+        if (screen) {
+            y = (screen.availHeight - height - 70) / 2;
+            x = (screen.availWidth - width) / 2;
+        }
+
+        window.open('', WindowName, 'width=' + width + ',height=' + height + ',screenX=' + x + ',screenY=' + y + ',top=' + y + ',left=' + x + ',status=yes,location=yes,resizable=no,scrollbars=yes');
+    }
+
+    function submitFormEx(Form, OpenNewWindowFlag, WindowName) {
+        submitForm(Form, OpenNewWindowFlag, WindowName)
+        Form.submit();
+    }
+
+    submitFormEx(posnetForm, 0, 'YKBWindow');</script>
 </head>
 <body>
 <form name="posnetForm" method="post" action="https://setmpos.ykb.com/3DSWebService/YKBPaymentService"
-      target="YKBWindow">
-    <input name="mid" type="hidden" id="mid" value="6797752273">
-    <input name="posnetID" type="hidden" id="PosnetID" value="28440">
-    <input name="posnetData" type="hidden" id="posnetData"
-           value="CBA534720911B1EC43FEC4220E42C93DCB7FE29F8238CA8167081ABD8ED59CB71DAD7D895BE6715D558BF2D18A6CD37692B2C9C8FE2409F584178CE78AACFF7E9C34CFED7AE732825E58D2C58C1B85969BDC64BF5D0CB63104AE6D3DAB81C18270C60CEB2CD131E41461B3F966B129A81B439EDF967F1AF18949358F10F74B970E11EF73D55A454640874C72AA12A8DF6E7476BC25BB24B1EE8CF8AE">
-    <input name="posnetData2" type="hidden" id="posnetData2"
-           value="EDF46B6D0D6E243A5B75C5B46ADEBC0B71E77B4D047D0C407A7FA6418C298C1993CDE012044B4E55269CED98753E963E6614151F">
-    <input name="digest" type="hidden" id="sign" value="B0897ED7061EFEFCEC8CF6808E0A326D">
-    <input name="vftCode" type="hidden" id="vftCode" value="">
-    <input name="merchantReturnURL" type="hidden" id="merchantReturnURL" value="https://posnet.omnipay.com/payment">
-    <input name="lang" type="hidden" id="lang" value="tr">
-    <input name="url" type="hidden" id="url" value="https://omnipay.com">
-    <input name="openANewWindow" type="hidden" id="openANewWindow" value="0"></form>
+      target="YKBWindow"><input name="mid" type="hidden" id="mid" value="6797752273"><input name="posnetID"
+                                                                                            type="hidden" id="PosnetID"
+                                                                                            value="28440"><input
+        name="posnetData" type="hidden" id="posnetData"
+        value="5855B34EBB5D7FAB1F7A0EAB68533B9643BB3C907B94B960E41668711A2DA2AAF72C7B0A41792EBA15C6AF134DA45E1AF7E0104D2BDD3914B6C8DFEFED0C710EBC4DE9D858A1ECA8A1589B45F42F6334EA0EBF490CC7E218182C691FF0BF425AD6347683598650813232FA74D72079A61B1E728F6E9EA93E3169188681E8362F042320DDC6B9E1EBE96D13D900EC44C1F99AE7F2B15B29982427116D"><input
+        name="posnetData2" type="hidden" id="posnetData2"
+        value="EA77CD3BD733BDABEC4D4CDA78D39DCD5BB258223A08F36F359CDC12B5A9DDFF010A9C606A6E1E5B3475614DE8DA4215DE147E83"><input
+        name="digest" type="hidden" id="sign" value="B3974CDA4A77E7FEA9FDF3C91EB2D7E5"><input name="vftCode"
+                                                                                              type="hidden" id="vftCode"
+                                                                                              value=""><input
+        name="merchantReturnURL" type="hidden" id="merchantReturnURL" value="https://posnet.omnipay.com/payment"><input
+        name="lang" type="hidden" id="lang" value="tr"><input name="url" type="hidden" id="url"
+                                                              value="https://omnipay.com"><input name="openANewWindow"
+                                                                                                 type="hidden"
+                                                                                                 id="openANewWindow"
+                                                                                                 value="0"></form>
 </body>
 </html>

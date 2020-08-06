@@ -26,7 +26,7 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     {
         parent::__construct($request, $data);
         $this->statusCode = $statusCode;
-        $parsedXML = @simplexml_load_string($this->getData());
+        $parsedXML = @simplexml_load_string($this->data);
         $content = json_decode(json_encode((array)$parsedXML), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new RuntimeException('Could not resolve xml response to array');

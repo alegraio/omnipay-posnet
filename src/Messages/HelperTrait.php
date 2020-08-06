@@ -14,7 +14,7 @@ trait HelperTrait
 
     public function convertArrayToXml($data, SimpleXMLElement $xml): void
     {
-        $_xml = $xml;
+        $tempXml = $xml;
 
         // Visit all key value pair
         foreach ($data as $k => $v) {
@@ -23,12 +23,16 @@ trait HelperTrait
             if (is_array($v)) {
 
                 // Call function for nested array
-                $this->convertArrayToXml($v, $_xml->addChild($k));
+                $this->convertArrayToXml($v, $tempXml->addChild($k));
             } else {
 
                 // Simply add child element.
-                $_xml->addChild($k, $v);
+                $tempXml->addChild($k, $v);
             }
         }
+    }
+    public function hashString(string $originalString): string
+    {
+        return base64_encode(hash('sha256', $originalString, true));
     }
 }

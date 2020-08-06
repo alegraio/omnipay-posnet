@@ -18,12 +18,46 @@ class AuthorizeResponse extends Response
      */
     private $parameters;
 
+
+    /**
+     * @return bool
+     */
+    public function isRedirect(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUrl(): string
+    {
+        return $this->request->getOosTdsServiceUrl();
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function getData()
+    {
+        $responseData = $this->data;
+        return array_merge($responseData, $this->getThreeDSFormData());
+    }
+
+    public function getRedirectData(): ?array
+    {
+        return $this->getThreeDSFormData();
+    }
+
     /**
      * @return array|null
      */
     public function getThreeDSFormData(): ?array
     {
-        $responseData = $this->getData();
+        $responseData = $this->data;
+        if (!$this->isSuccessful()) {
+            return [];
+        }
         $posnetData = $responseData['oosRequestDataResponse']['data1'];
         $posnetData2 = $responseData['oosRequestDataResponse']['data2'];
         $digest = $responseData['oosRequestDataResponse']['sign'];
@@ -40,7 +74,7 @@ class AuthorizeResponse extends Response
             'lang' => 'tr',
             'url' => $this->parameters['websiteUrl'],
             'openANewWindow' => '0',
-            'oosTdsServiceUrl' => $this->getThreeDServiceUrl()
+            'oosTdsServiceUrl' => $this->request->getOosTdsServiceUrl()
         ];
         if (isset($this->parameters['useJokerVadaa'])) {
             $formData['useJokerVadaa'] = $this->parameters['useJokerVadaa'];
@@ -49,7 +83,10 @@ class AuthorizeResponse extends Response
         return $formData;
     }
 
-    public function getThreeDSFormHtml(): ?string
+    /**
+     * @return string|null
+     */
+    public function getHtml(): ?string
     {
         $dom = new DOMDocument('1.0');
         $formData = $this->getThreeDSFormData();
@@ -167,6 +204,9 @@ class AuthorizeResponse extends Response
         return $dom->saveHTML();
     }
 
+    /**
+     * @return string
+     */
     public function getPosnetJs(): string
     {
         return <<<EOF

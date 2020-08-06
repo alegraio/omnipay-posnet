@@ -4,6 +4,8 @@
 namespace Omnipay\PosNet\Messages;
 
 
+use Omnipay\Common\Exception\InvalidRequestException;
+
 trait BaseParametersTrait
 {
     public $xmlServiceUrls = [
@@ -12,6 +14,7 @@ trait BaseParametersTrait
         'test3d' => 'https://setmpos.ykb.com/3DSWebService/YKBPaymentService',
         '3d' => 'https://www.posnet.ykb.com/3DSWebService/YKBPaymentService'
     ];
+    public $encKey = '10,10,10,10,10,10,10,10';
 
     public function setMerchantId(string $merchantId)
     {
@@ -43,6 +46,24 @@ trait BaseParametersTrait
         return $this->getParameter('posNetId');
     }
 
+
+    public function setEncKey(string $encKey)
+    {
+        return $this->setParameter('encKey', $encKey);
+    }
+
+
+    public function getEncKey(): string
+    {
+        $encKey = $this->getParameter('encKey');
+        return $encKey ?? $this->encKey;
+    }
+
+    public function setOosTdsServiceUrl(string $tdsServiceUrl)
+    {
+        return $this->setParameter('oosTdsServiceUrl', $tdsServiceUrl);
+    }
+
     public function getXmlServiceUrl(): string
     {
         $serviceUrl = ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
@@ -54,9 +75,14 @@ trait BaseParametersTrait
         return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
     }
 
-    public function getThreeDServiceUrl(): string
+    public function getPaymentType(): ?string
     {
-        return ($this->parameters['testMode']) ? $this->xmlServiceUrls['test3d'] : $this->xmlServiceUrls['3d'];
+        return $this->getParameter('paymentType');
+    }
+
+    public function setPaymentType(string $paymentType)
+    {
+        return $this->setParameter('paymentType', $paymentType);
     }
 
     public function getOrderID(): ?string
@@ -69,9 +95,19 @@ trait BaseParametersTrait
         return $this->setParameter('orderID', $orderId);
     }
 
-    public function getXid(): string
+    public function getXidByOrderId(): string
     {
         return str_pad($this->getOrderID(), 20, '0', STR_PAD_LEFT);
+    }
+
+    public function setXid(string $xid)
+    {
+        return $this->setParameter('xid', $xid);
+    }
+
+    public function getXid(): string
+    {
+        return $this->getParameter('xid');
     }
 
     public function getInstallment(): string
@@ -92,6 +128,56 @@ trait BaseParametersTrait
     public function setAmount($amount)
     {
         return $this->setParameter('amount', $amount);
+    }
+
+    public function getWpAmount(): string
+    {
+        return $this->getParameter('wpAmount');
+    }
+
+    public function setWpAmount($wpAmount)
+    {
+        return $this->setParameter('wpAmount', $wpAmount);
+    }
+
+    public function getMerchantPacket(): string
+    {
+        return $this->getParameter('merchantPacket');
+    }
+
+    public function setMerchantPacket($merchantPacket)
+    {
+        return $this->setParameter('merchantPacket', $merchantPacket);
+    }
+
+    public function getBankPacket(): string
+    {
+        return $this->getParameter('bankPacket');
+    }
+
+    public function setBankPacket($bankPacket)
+    {
+        return $this->setParameter('bankPacket', $bankPacket);
+    }
+
+    public function getSign(): string
+    {
+        return $this->getParameter('sign');
+    }
+
+    public function setSign($sign)
+    {
+        return $this->setParameter('sign', $sign);
+    }
+
+    public function getCcPrefix(): string
+    {
+        return $this->getParameter('sign');
+    }
+
+    public function setCcPrefix($ccPrefix)
+    {
+        return $this->setParameter('ccPrefix', $ccPrefix);
     }
 
     public function getTranType(): string
@@ -132,5 +218,22 @@ trait BaseParametersTrait
     public function setWebsiteUrl($websiteUrl)
     {
         return $this->setParameter('websiteUrl', $websiteUrl);
+    }
+
+    /**
+     * @return string
+     * @throws InvalidRequestException
+     */
+    public function getMac(): string
+    {
+        $encKey = $this->getEncKey();
+        $terminalID = $this->getTerminalId();
+        $xid = $this->getXid();
+        $amount = $this->getAmount();
+        $currency = $this->getCurrency();
+        $merchantId = $this->getMerchantId();
+        $firstHash = $this->hashString($encKey . ';' . $terminalID);
+        return $this->hashString($xid . ';' . $amount . ';' . $currency . ';' . $merchantId . ';'
+            . $firstHash);
     }
 }

@@ -5,6 +5,7 @@
 
 namespace Omnipay\PosNet\Messages;
 
+use Exception;
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\ItemBag;
@@ -45,7 +46,7 @@ class AuthorizeRequest extends AbstractRequest
             'tid' => $this->getTerminalId(),
             $this->action => [
                 'posnetid' => $this->getPosNetId(),
-                'XID' => $this->getXid(),
+                'XID' => $this->getXidByOrderId(),
                 'amount' => $this->getAmount(),
                 'currencyCode' => $this->getCurrency(),
                 'installment' => $this->getInstallment(),
@@ -61,11 +62,18 @@ class AuthorizeRequest extends AbstractRequest
     }
 
 
+    public function getOosTdsServiceUrl(): string
+    {
+        $tdsServiceUrl = $this->getParameter('oosTdsServiceUrl');
+        $tdsStaticServiceUrl = ($this->getTestMode()) ? $this->xmlServiceUrls['test3d'] : $this->xmlServiceUrls['3d'];
+        return $tdsServiceUrl ?: $tdsStaticServiceUrl;
+    }
+
     /**
      * @param $data
      * @param $statusCode
      * @return AuthorizeResponse
-     * @throws \Exception
+     * @throws Exception
      */
     protected function createResponse($data, $statusCode): AuthorizeResponse
     {
