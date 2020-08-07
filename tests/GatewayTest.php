@@ -9,6 +9,7 @@ use Omnipay\PosNet\Messages\HelperTrait;
 use Omnipay\PosNet\Messages\MacValidationException;
 use Omnipay\PosNet\Messages\PurchaseResponse;
 use Omnipay\PosNet\Messages\RefundResponse;
+use Omnipay\PosNet\Messages\VoidResponse;
 use Omnipay\PosNet\PosNetGateway;
 
 class GatewayTest extends GatewayTestCase
@@ -122,7 +123,7 @@ class GatewayTest extends GatewayTestCase
             'card' => $paymentCard,
             'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
             'websiteUrl' => 'https://omnipay.com',
-            'paymentType' => '3d' // '3d', 'direct'
+            'paymentType' => 'direct' // '3d', 'direct'
             // 'koiCode' => '',
             // 'subMrcId' => '',
             // 'tckn' => '',
@@ -131,7 +132,6 @@ class GatewayTest extends GatewayTestCase
         ];
         /** @var PurchaseResponse|AuthorizeResponse $response */
         $response = $this->gateway->purchase($this->parameters)->send();
-        echo $response->getHtml();
         $this->assertTrue($response->isSuccessful());
     }
 
@@ -171,6 +171,18 @@ class GatewayTest extends GatewayTestCase
 
         /** @var RefundResponse $response */
         $response = $this->gateway->refund($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
+    }
+
+    public function testVoid(): void
+    {
+        $this->parameters = [
+            'transaction' => 'sale',
+            'hostLogKey' => '026963775690000201'
+        ];
+
+        /** @var VoidResponse $response */
+        $response = $this->gateway->void($this->parameters)->send();
         $this->assertTrue($response->isSuccessful());
     }
 }

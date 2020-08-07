@@ -1,16 +1,16 @@
 <?php
 /**
- * PosNet Refund Request
+ * PosNet Void Request
  */
 
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
 
-class RefundRequest extends AbstractRequest
+class VoidRequest extends AbstractRequest
 {
 
-    public $action = 'return';
+    public $action = 'reverse';
 
     /**
      * @return array|mixed
@@ -21,14 +21,13 @@ class RefundRequest extends AbstractRequest
         $data = [
             'mid' => $this->getMerchantId(),
             'tid' => $this->getTerminalId(),
-            'tranDateRequired' => $this->getTranDateRequired(),
             $this->action => [
-                'amount' => $this->getAmount(),
-                'currencyCode' => $this->getCurrency()
+                'transaction' => $this->getTransaction(),
+                'hostLogKey' => $this->getHostLogKey()
             ]
         ];
-        if ($this->getHostLogKey() !== null) {
-            $data[$this->action]['hostLogKey'] = $this->getHostLogKey();
+        if ($this->getAuthCode() !== null) { // Used for VFT (Transaction with different maturity)
+            $data[$this->action]['authCode'] = $this->getAuthCode();
             return $data;
         }
         if ($this->getOrderID() !== null) {
@@ -40,12 +39,11 @@ class RefundRequest extends AbstractRequest
     /**
      * @param $data
      * @param $statusCode
-     * @return RefundResponse
+     * @return VoidResponse
      * @throws Exception
      */
-    protected function createResponse($data, $statusCode): RefundResponse
+    protected function createResponse($data, $statusCode): VoidResponse
     {
-        return new RefundResponse($this, $data, $statusCode);
+        return new VoidResponse($this, $data, $statusCode);
     }
-
 }

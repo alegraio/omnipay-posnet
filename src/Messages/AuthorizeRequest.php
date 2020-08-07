@@ -8,28 +8,11 @@ namespace Omnipay\PosNet\Messages;
 use Exception;
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Common\ItemBag;
-use Omnipay\PosNet\PosNetItemBag;
 
 class AuthorizeRequest extends AbstractRequest
 {
 
     public $action = 'oosRequestData';
-
-    /**
-     * Set the items in this order
-     *
-     * @param array|ItemBag $items An array of items in this order
-     * @return AuthorizeRequest
-     */
-    public function setItems($items): \Omnipay\Common\Message\AbstractRequest
-    {
-        if ($items && !$items instanceof ItemBag) {
-            $items = new PosNetItemBag($items);
-        }
-
-        return $this->setParameter('items', $items);
-    }
 
     /**
      * @return mixed

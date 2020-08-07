@@ -16,12 +16,11 @@ use Omnipay\PosNet\Messages\MacValidationRequest;
 use Omnipay\PosNet\Messages\PurchaseRequest;
 use Omnipay\PosNet\Messages\CompletePurchaseRequest;
 use Omnipay\PosNet\Messages\RefundRequest;
-use Omnipay\PosNet\Messages\OrderTransactionRequest;
+use Omnipay\PosNet\Messages\VoidRequest;
 
 
 /**
  * @method RequestInterface capture(array $options = array())
- * @method RequestInterface void(array $options = array())
  * @method RequestInterface createCard(array $options = array())
  * @method RequestInterface updateCard(array $options = array())
  * @method RequestInterface deleteCard(array $options = array())
@@ -76,11 +75,11 @@ class PosNetGateway extends AbstractGateway
     public function completePurchase(array $parameters = [])
     {
         $macValidationResponse = $this->createRequest(MacValidationRequest::class, $parameters)->send();
-        if ($macValidationResponse->isSuccessful()) {
+        if ($macValidationResponse->isSuccessful() && $macValidationResponse->getMdStatus() === 1) {
             return $this->createRequest(CompletePurchaseRequest::class, $parameters);
         }
 
-        throw new MacValidationException(json_encode($macValidationResponse->getData()));
+        throw new MacValidationException(json_encode($macValidationResponse->getData(), JSON_THROW_ON_ERROR, 512));
 
     }
 
@@ -97,8 +96,8 @@ class PosNetGateway extends AbstractGateway
      * @param array $parameters
      * @return AbstractRequest|RequestInterface
      */
-    public function orderTransaction(array $parameters = [])
+    public function void(array $parameters = [])
     {
-        return $this->createRequest(OrderTransactionRequest::class, $parameters);
+        return $this->createRequest(VoidRequest::class, $parameters);
     }
 }

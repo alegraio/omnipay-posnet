@@ -5,6 +5,7 @@
 
 namespace Omnipay\PosNet\Messages;
 
+use Exception;
 use Omnipay\Common\Exception\InvalidRequestException;
 
 class PurchaseRequest extends AbstractRequest
@@ -39,20 +40,10 @@ class PurchaseRequest extends AbstractRequest
      * @param $data
      * @param $statusCode
      * @return PurchaseResponse
-     * @throws \Exception
+     * @throws Exception
      */
     protected function createResponse($data, $statusCode): PurchaseResponse
     {
         return new PurchaseResponse($this, $data, $statusCode);
-    }
-
-    public function getTranDateRequired(): string
-    {
-        return $this->getParameter('tranDateRequired');
-    }
-
-    public function setTranDateRequired(String $tranDateRequired): PurchaseRequest
-    {
-        return $this->setParameter('tranDateRequired', $tranDateRequired);
     }
 }

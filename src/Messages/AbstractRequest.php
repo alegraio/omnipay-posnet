@@ -15,11 +15,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     public const postParameterKey = 'xmldata';
 
-    public function setItems($items): \Omnipay\Common\Message\AbstractRequest
-    {
-        return parent::setItems($items);
-    }
-
     public function getHeaders(): array
     {
         return [

@@ -190,6 +190,27 @@ trait BaseParametersTrait
         return $this->setParameter('tranType', $tranType);
     }
 
+
+    /**
+     * Set TranDateRequired value to include time value in response data.
+     *
+     * @param string $tranDateRequired
+     */
+    public function setTranDateRequired(string $tranDateRequired): void
+    {
+        $this->setParameter('tranDateRequired', $tranDateRequired);
+    }
+
+    /**
+     * Get TranDateRequired value.
+     *
+     * @return string
+     */
+    public function getTranDateRequired(): string
+    {
+        return $this->getParameter('tranDateRequired');
+    }
+
     public function getHostLogKey(): ?string
     {
         return $this->getParameter('hostLogKey');
@@ -218,6 +239,26 @@ trait BaseParametersTrait
     public function setWebsiteUrl($websiteUrl)
     {
         return $this->setParameter('websiteUrl', $websiteUrl);
+    }
+
+    public function getTransaction(): ?string
+{
+    return $this->getParameter('transaction');
+}
+
+    public function setTransaction($transaction)
+    {
+        return $this->setParameter('transaction', $transaction);
+    }
+
+    public function getAuthCode(): ?string
+    {
+        return $this->getParameter('authCode');
+    }
+
+    public function setAuthCode($authCode)
+    {
+        return $this->setParameter('authCode', $authCode);
     }
 
     /**
