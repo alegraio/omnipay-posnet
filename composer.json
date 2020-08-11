@@ -1,0 +1,30 @@
+{
+  "name": "alegra/omnipay-posnet",
+  "type": "library",
+  "description": "Posnet(Yapıkredi, Vakıfbank, Anadolubank sanal pos) gateway for Omnipay payment processing library",
+  "homepage": "https://git.alegradigital.com/microservices/payment-posnet",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\PosNet\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.3",
+    "omnipay/common": "^3",
+    "ext-json": "*",
+    "ext-simplexml": "*",
+    "ext-dom": "*"
+  },
+  "require-dev": {
+    "omnipay/tests": "^3",
+    "squizlabs/php_codesniffer": "^3",
+    "phpro/grumphp": "^0.18"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.0.x-dev"
+    }
+  },
+  "prefer-stable": true
+}

@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript">             // JavaScript Document
+    function submitForm(Form, OpenNewWindowFlag, WindowName) {
+
+        var isURLExist = false;
+        var isNewWindowExist = false;
+
+        if (document.all || document.getElementById) {
+            for (i = 0; i < Form.length; i++) {
+                var tempobj = Form.elements[i];
+
+                if (tempobj.name.toLowerCase() == "url") {
+                    Form.url.value = location.href;
+                    isURLExist = true;
+                }
+
+                if (OpenNewWindowFlag & tempobj.name == "openANewWindow") {
+                    tempobj.value = "1";
+                    isNewWindowExist = true;
+                } else if (tempobj.name == "openANewWindow") {
+                    tempobj.value = "0";
+                    isNewWindowExist = true;
+                }
+            }
+        }
+
+        if (!isURLExist) {
+            el = document.createElement("input");
+            el.name = "url";
+            el.type = "hidden";
+            el.value = location.href;
+            el = Form.appendChild(el);
+        }
+
+        if (!isNewWindowExist) {
+            el2 = document.createElement("input");
+            el2.name = "openANewWindow";
+            el2.type = "hidden";
+            if (OpenNewWindowFlag)
+                el2.value = "1";
+            else
+                el2.value = "0";
+            el2 = Form.appendChild(el2);
+        }
+
+        if (OpenNewWindowFlag) {
+            window.name = "merchantWindow";
+            openWindow(WindowName, 650, 600);
+        } else
+            window.name = "YKBWindow";
+    }
+
+    function openWindow(WindowName, width, height) {
+        x = (640 - width) / 2, y = (480 - height) / 2;
+
+        if (screen) {
+            y = (screen.availHeight - height - 70) / 2;
+            x = (screen.availWidth - width) / 2;
+        }
+
+        window.open('', WindowName, 'width=' + width + ',height=' + height + ',screenX=' + x + ',screenY=' + y + ',top=' + y + ',left=' + x + ',status=yes,location=yes,resizable=no,scrollbars=yes');
+    }
+
+    function submitFormEx(Form, OpenNewWindowFlag, WindowName) {
+        submitForm(Form, OpenNewWindowFlag, WindowName)
+        Form.submit();
+    }
+
+    submitFormEx(posnetForm, 0, 'YKBWindow');</script>
+</head>
+<body>
+<form name="posnetForm" method="post" action="https://setmpos.ykb.com/3DSWebService/YKBPaymentService"
+      target="YKBWindow"><input name="mid" type="hidden" id="mid" value="6797752273"><input name="posnetID"
+                                                                                            type="hidden" id="PosnetID"
+                                                                                            value="28440"><input
+        name="posnetData" type="hidden" id="posnetData"
+        value="5855B34EBB5D7FAB1F7A0EAB68533B9643BB3C907B94B960E41668711A2DA2AAF72C7B0A41792EBA15C6AF134DA45E1AF7E0104D2BDD3914B6C8DFEFED0C710EBC4DE9D858A1ECA8A1589B45F42F6334EA0EBF490CC7E218182C691FF0BF425AD6347683598650813232FA74D72079A61B1E728F6E9EA93E3169188681E8362F042320DDC6B9E1EBE96D13D900EC44C1F99AE7F2B15B29982427116D"><input
+        name="posnetData2" type="hidden" id="posnetData2"
+        value="EA77CD3BD733BDABEC4D4CDA78D39DCD5BB258223A08F36F359CDC12B5A9DDFF010A9C606A6E1E5B3475614DE8DA4215DE147E83"><input
+        name="digest" type="hidden" id="sign" value="B3974CDA4A77E7FEA9FDF3C91EB2D7E5"><input name="vftCode"
+                                                                                              type="hidden" id="vftCode"
+                                                                                              value=""><input
+        name="merchantReturnURL" type="hidden" id="merchantReturnURL" value="https://posnet.omnipay.com/payment"><input
+        name="lang" type="hidden" id="lang" value="tr"><input name="url" type="hidden" id="url"
+                                                              value="https://omnipay.com"><input name="openANewWindow"
+                                                                                                 type="hidden"
+                                                                                                 id="openANewWindow"
+                                                                                                 value="0"></form>
+</body>
+</html>
