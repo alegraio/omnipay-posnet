@@ -120,16 +120,6 @@ trait BaseParametersTrait
         return $this->setParameter('installment', $installment);
     }
 
-    public function getAmount(): string
-    {
-        return $this->getParameter('amount');
-    }
-
-    public function setAmount($amount)
-    {
-        return $this->setParameter('amount', $amount);
-    }
-
     public function getWpAmount(): string
     {
         return $this->getParameter('wpAmount');
