@@ -55,7 +55,7 @@ class GatewayTest extends GatewayTestCase
             // 'mid' => $this->gateway->getMerchantId(),
             // 'tid' => $this->gateway->getTerminalId(),
             'tranType' => 'Sale',
-            'amount' => 3600,
+            'amount' => 36.00,
             'orderID' => 'YKB_0000080603143050',
             'installment' => '00',
             'card' => $paymentCard,
@@ -84,7 +84,7 @@ class GatewayTest extends GatewayTestCase
             // 'mid' => $this->gateway->getMerchantId(),
             // 'tid' => $this->gateway->getTerminalId(),
             'tranType' => 'Sale',
-            'amount' => 3600,
+            'amount' => 36.00,
             'orderID' => 'YKB_0000080603143050',
             'installment' => '00',
             'card' => $paymentCard,
@@ -117,7 +117,7 @@ class GatewayTest extends GatewayTestCase
             // 'tid' => $this->gateway->getTerminalId(),
             'tranType' => 'Sale',
             'tranDateRequired' => '1',
-            'amount' => 2451,
+            'amount' => 24.50,
             'orderID' => $this->getRandomString(20),
             'installment' => '00',
             'card' => $paymentCard,
@@ -147,7 +147,7 @@ class GatewayTest extends GatewayTestCase
             'sign' => '7D12250A1313A3E7C71192371EFC71F2',
             'ccPrefix' => '517041',
             'tranType' => 'Sale',
-            'amount' => 2451,
+            'amount' => 24.50,
             'wpAmount' => 0,
             'xid' => 'YpJkEnAN90rHzMDFaGjI',
             // 'merchantId' => 'XXXXXXXX' // merchantId is already defined in Gateway object
@@ -165,7 +165,7 @@ class GatewayTest extends GatewayTestCase
     {
         $this->parameters = [
             'tranDateRequired' => '1',
-            'amount' => 2000,
+            'amount' => 20.00,
             'hostLogKey' => '026961487790000201'
         ];
 
