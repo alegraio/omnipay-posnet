@@ -24,7 +24,7 @@ class PurchaseRequest extends AbstractRequest
             'tid' => $this->getTerminalId(),
             'tranDateRequired' => $this->getTranDateRequired(),
             $this->action => [
-                'amount' => $this->getAmount(),
+                'amount' => $this->getAmountInteger(),
                 'ccno' => $this->getCard()->getNumber(),
                 'currencyCode' => $this->getCurrency(),
                 'cvc' => $this->getCard()->getCvv(),

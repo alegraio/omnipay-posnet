@@ -30,7 +30,7 @@ class AuthorizeRequest extends AbstractRequest
             $this->action => [
                 'posnetid' => $this->getPosNetId(),
                 'XID' => $this->getXidByOrderId(),
-                'amount' => $this->getAmount(),
+                'amount' => $this->getAmountInteger(),
                 'currencyCode' => $this->getCurrency(),
                 'installment' => $this->getInstallment(),
                 'tranType' => $this->getTranType(),

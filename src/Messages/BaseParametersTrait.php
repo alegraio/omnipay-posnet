@@ -4,8 +4,6 @@
 namespace Omnipay\PosNet\Messages;
 
 
-use Omnipay\Common\Exception\InvalidRequestException;
-
 trait BaseParametersTrait
 {
     public $xmlServiceUrls = [
@@ -232,9 +230,9 @@ trait BaseParametersTrait
     }
 
     public function getTransaction(): ?string
-{
-    return $this->getParameter('transaction');
-}
+    {
+        return $this->getParameter('transaction');
+    }
 
     public function setTransaction($transaction)
     {
@@ -253,14 +251,13 @@ trait BaseParametersTrait
 
     /**
      * @return string
-     * @throws InvalidRequestException
      */
     public function getMac(): string
     {
         $encKey = $this->getEncKey();
         $terminalID = $this->getTerminalId();
         $xid = $this->getXid();
-        $amount = $this->getAmount();
+        $amount = $this->getAmountInteger();
         $currency = $this->getCurrency();
         $merchantId = $this->getMerchantId();
         $firstHash = $this->hashString($encKey . ';' . $terminalID);

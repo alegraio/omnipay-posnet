@@ -23,7 +23,7 @@ class RefundRequest extends AbstractRequest
             'tid' => $this->getTerminalId(),
             'tranDateRequired' => $this->getTranDateRequired(),
             $this->action => [
-                'amount' => $this->getAmount(),
+                'amount' => $this->getAmountInteger(),
                 'currencyCode' => $this->getCurrency()
             ]
         ];
