@@ -36,7 +36,7 @@ class GatewayTest extends GatewayTestCase
         $this->gateway->setOosTdsServiceUrl(getenv('TDS_SERVICE_URL'));
         $this->gateway->setEncKey(getenv('ENC_KEY'));
         $this->gateway->setTestMode(true);
-        $this->gateway->setCurrency('TL');
+        $this->gateway->setCurrency('TRY');
     }
 
     public function testAuthorize(): void
@@ -132,6 +132,7 @@ class GatewayTest extends GatewayTestCase
         ];
         /** @var PurchaseResponse|AuthorizeResponse $response */
         $response = $this->gateway->purchase($this->parameters)->send();
+        var_dump($response->getTransactionReference());
         $this->assertTrue($response->isSuccessful());
     }
 

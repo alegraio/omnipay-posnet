@@ -258,7 +258,7 @@ trait BaseParametersTrait
         $terminalID = $this->getTerminalId();
         $xid = $this->getXid();
         $amount = $this->getAmountInteger();
-        $currency = $this->getCurrency();
+        $currency = $this->getMatchingCurrency();
         $merchantId = $this->getMerchantId();
         $firstHash = $this->hashString($encKey . ';' . $terminalID);
         return $this->hashString($xid . ';' . $amount . ';' . $currency . ';' . $merchantId . ';'

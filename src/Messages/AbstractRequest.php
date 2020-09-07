@@ -14,6 +14,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     use HelperTrait, BaseParametersTrait;
 
     public const postParameterKey = 'xmldata';
+    public const CURRENCIES = [
+        'TRY' => 'TL',
+        'EUR' => 'EU',
+        'USD' => 'US'
+    ];
 
     public function getHeaders(): array
     {
@@ -36,7 +41,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         $xml = new SimpleXMLElement('<posnetRequest/>');
         $this->convertArrayToXml($data, $xml);
         $xmlStr = $xml->asXml();
-        $xmlStr = preg_replace( "/<\?xml.+?\?>/", '', $xmlStr);
+        $xmlStr = preg_replace("/<\?xml.+?\?>/", '', $xmlStr);
         $xmlStr = mb_convert_encoding($xmlStr, 'UTF-8');
 
         $bodyArr = [
@@ -67,4 +72,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     {
         return $this->getParameter('correlationId') ?: $this->getRandomString(24); // CorrelationId max 24 chars.
     }
+
+    public function getMatchingCurrency()
+    {
+        $currency = $this->getParameter('currency');
+        return self::CURRENCIES[$currency] ?? $currency;
+    }
+
 }
