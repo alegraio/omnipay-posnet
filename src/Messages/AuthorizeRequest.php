@@ -31,7 +31,7 @@ class AuthorizeRequest extends AbstractRequest
                 'posnetid' => $this->getPosNetId(),
                 'XID' => $this->getXidByOrderId(),
                 'amount' => $this->getAmountInteger(),
-                'currencyCode' => $this->getCurrency(),
+                'currencyCode' => $this->getMatchingCurrency(),
                 'installment' => $this->getInstallment(),
                 'tranType' => $this->getTranType(),
                 'cardHolderName' => $this->getCard()->getName(),

@@ -43,6 +43,14 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         return !(1 !== (int)$this->data['approved']);
     }
 
+    /**
+     * @return string|null
+     */
+    public function getTransactionReference(): ?string
+    {
+        return $this->data['hostlogkey'] ?? null;
+    }
+
     public function getCode(): int
     {
         return $this->statusCode;

@@ -24,7 +24,7 @@ class RefundRequest extends AbstractRequest
             'tranDateRequired' => $this->getTranDateRequired(),
             $this->action => [
                 'amount' => $this->getAmountInteger(),
-                'currencyCode' => $this->getCurrency()
+                'currencyCode' => $this->getMatchingCurrency()
             ]
         ];
         if ($this->getHostLogKey() !== null) {

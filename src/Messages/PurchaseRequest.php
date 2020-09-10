@@ -26,7 +26,7 @@ class PurchaseRequest extends AbstractRequest
             $this->action => [
                 'amount' => $this->getAmountInteger(),
                 'ccno' => $this->getCard()->getNumber(),
-                'currencyCode' => $this->getCurrency(),
+                'currencyCode' => $this->getMatchingCurrency(),
                 'cvc' => $this->getCard()->getCvv(),
                 'expDate' => $this->getCard()->getExpiryDate('ym'),
                 'orderID' => str_pad($this->getOrderID(), 24, '0', STR_PAD_LEFT),
