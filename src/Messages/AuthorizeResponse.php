@@ -24,7 +24,7 @@ class AuthorizeResponse extends Response
      */
     public function isRedirect(): bool
     {
-        return true;
+        return $this->isSuccessful();
     }
 
     /**
