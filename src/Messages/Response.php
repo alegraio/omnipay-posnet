@@ -15,6 +15,9 @@ class Response extends AbstractResponse implements RedirectResponseInterface
 {
     protected $statusCode;
 
+    /** @var array */
+    public $serviceRequestParams;
+
     /**
      * Response constructor.
      * @param RequestInterface $request
@@ -65,4 +68,19 @@ class Response extends AbstractResponse implements RedirectResponseInterface
         return $this->data = $data;
     }
 
+    /**
+     * @return array
+     */
+    public function getServiceRequestParams(): array
+    {
+        return $this->serviceRequestParams;
+    }
+
+    /**
+     * @param array $serviceRequestParams
+     */
+    public function setServiceRequestParams(array $serviceRequestParams): void
+    {
+        $this->serviceRequestParams = $serviceRequestParams;
+    }
 }

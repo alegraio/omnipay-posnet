@@ -44,6 +44,9 @@ class PurchaseRequest extends AbstractRequest
      */
     protected function createResponse($data, $statusCode): PurchaseResponse
     {
-        return new PurchaseResponse($this, $data, $statusCode);
+        $response = new PurchaseResponse($this, $data, $statusCode);
+        $response->setServiceRequestParams($data);
+
+        return $response;
     }
 }
