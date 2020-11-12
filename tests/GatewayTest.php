@@ -39,6 +39,18 @@ class GatewayTest extends GatewayTestCase
         $this->gateway->setCurrency('TRY');
     }
 
+    public function testVoid(): void
+    {
+        $this->parameters = [
+            'transaction' => 'sale',
+            'hostLogKey' => '026963775690000201'
+        ];
+
+        /** @var VoidResponse $response */
+        $response = $this->gateway->void($this->parameters)->send();
+        $this->assertTrue($response->isSuccessful());
+    }
+
     public function testAuthorize(): void
     {
         $paymentCard = [
@@ -172,18 +184,6 @@ class GatewayTest extends GatewayTestCase
 
         /** @var RefundResponse $response */
         $response = $this->gateway->refund($this->parameters)->send();
-        $this->assertTrue($response->isSuccessful());
-    }
-
-    public function testVoid(): void
-    {
-        $this->parameters = [
-            'transaction' => 'sale',
-            'hostLogKey' => '026963775690000201'
-        ];
-
-        /** @var VoidResponse $response */
-        $response = $this->gateway->void($this->parameters)->send();
         $this->assertTrue($response->isSuccessful());
     }
 }

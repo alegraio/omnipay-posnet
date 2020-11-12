@@ -42,7 +42,8 @@ class MacValidationRequest extends AbstractRequest
     protected function createResponse($data, $statusCode): MacValidationResponse
     {
         $response = new MacValidationResponse($this, $data, $statusCode);
-        $response->setServiceRequestParams($data);
+        $requestParams = $this->getRequestParams();
+        $response->setServiceRequestParams($requestParams);
 
         return $response;
     }
