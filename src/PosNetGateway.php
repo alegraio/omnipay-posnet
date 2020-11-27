@@ -10,7 +10,6 @@ use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\PosNet\Messages\BaseParametersTrait;
-use Omnipay\PosNet\Messages\MacValidationException;
 use Omnipay\PosNet\Messages\MacValidationRequest;
 use Omnipay\PosNet\Messages\PurchaseRequest;
 use Omnipay\PosNet\Messages\CompletePurchaseRequest;
@@ -39,9 +38,57 @@ class PosNetGateway extends AbstractGateway
           'merchantId' => '',
           'terminalId' => '',
           'posNetId' => '',
-          'encKey' => '',
-          'oosTdsServiceUrl' => '',
+          'encKey' => ''
         ];
+    }
+
+
+    public function setMerchantId(string $merchantId): PosNetGateway
+    {
+        return $this->setParameter('merchantId', $merchantId);
+    }
+
+    public function getMerchantId(): ?string
+    {
+        return $this->getParameter('merchantId');
+    }
+
+    public function setTerminalId(string $terminalId): PosNetGateway
+    {
+        return $this->setParameter('terminalId', $terminalId);
+    }
+
+    public function getTerminalId(): ?string
+    {
+        return $this->getParameter('terminalId');
+    }
+
+    public function setPosNetId(string $posNetId): PosNetGateway
+    {
+        return $this->setParameter('posNetId', $posNetId);
+    }
+
+    public function getPosNetId(): ?string
+    {
+        return $this->getParameter('posNetId');
+    }
+
+
+    public function setEncKey(string $encKey): PosNetGateway
+    {
+        return $this->setParameter('encKey', $encKey);
+    }
+
+
+    public function getEncKey(): ?string
+    {
+        $encKey = $this->getParameter('encKey');
+        return $encKey ?? $this->encKey;
+    }
+
+    public function setOosTdsServiceUrl(string $tdsServiceUrl): PosNetGateway
+    {
+        return $this->setParameter('oosTdsServiceUrl', $tdsServiceUrl);
     }
 
     /**
@@ -57,7 +104,7 @@ class PosNetGateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return AbstractRequest|RequestInterface
+     * @return AbstractRequest|PurchaseRequest
      */
     public function purchase(array $parameters = [])
     {
@@ -66,23 +113,26 @@ class PosNetGateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return AbstractRequest|RequestInterface
-     * @throws MacValidationException
+     * @return AbstractRequest|CompletePurchaseRequest|null
      */
     public function completePurchase(array $parameters = [])
     {
-        $macValidationResponse = $this->createRequest(MacValidationRequest::class, $parameters)->send();
-        if ($macValidationResponse->isSuccessful() && (($this->getTestMode() && $macValidationResponse->getMdStatus() === 9) || $macValidationResponse->getMdStatus() === 1)) {
-            return $this->createRequest(CompletePurchaseRequest::class, $parameters);
-        }
-
-        throw new MacValidationException(json_encode($macValidationResponse->getData(), JSON_THROW_ON_ERROR, 512));
+        return $this->createRequest(CompletePurchaseRequest::class, $parameters);
 
     }
 
     /**
      * @param array $parameters
-     * @return AbstractRequest|RequestInterface
+     * @return AbstractRequest|RefundRequest
+     */
+    public function validateMac(array $parameters = [])
+    {
+        return $this->createRequest(MacValidationRequest::class, $parameters);
+    }
+
+    /**
+     * @param array $parameters
+     * @return AbstractRequest|RefundRequest
      */
     public function refund(array $parameters = [])
     {
@@ -91,7 +141,7 @@ class PosNetGateway extends AbstractGateway
 
     /**
      * @param array $parameters
-     * @return AbstractRequest|RequestInterface
+     * @return AbstractRequest|VoidRequest
      */
     public function void(array $parameters = [])
     {
