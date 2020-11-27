@@ -19,12 +19,12 @@ class MacValidationRequestTest extends PosNetTestCase
 
     public function testEndpoint(): void
     {
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
-    public function testOrderId(): void
+    public function testData(): void
     {
-        self::assertSame('181683681', $this->request->getOrderId());
+        self::assertSame('517041', $this->request->getCcPrefix());
     }
 
     public function testSendSuccess(): void
@@ -34,20 +34,18 @@ class MacValidationRequestTest extends PosNetTestCase
 
         self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isRedirect());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
     public function testSendError(): void
     {
-        $this->setMockHttpResponse('MacValidationSuccess.txt');
+        $this->setMockHttpResponse('MacValidationFailure.txt');
         $response = $this->request->send();
 
         self::assertFalse($response->isSuccessful());
-        self::assertFalse($response->isRedirect());
-        self::assertSame('', $response->getTransactionReference());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getCode());
-        self::assertSame('', $response->getMessage());
+        self::assertEmpty($response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('0600', $response->getErrorCode());
+        self::assertSame('Mac Dogrulama hatali', $response->getMessage());
     }
 }

@@ -3,13 +3,12 @@
 namespace OmnipayTest\PosNet;
 
 
-use Omnipay\PosNet\Messages\Purchase3DResponse;
-use Omnipay\PosNet\Messages\CompletePurchaseResponse;
+use Omnipay\PosNet\Messages\CompletePurchaseRequest;
 use Omnipay\PosNet\Messages\HelperTrait;
 use Omnipay\PosNet\Messages\MacValidationException;
-use Omnipay\PosNet\Messages\PurchaseResponse;
-use Omnipay\PosNet\Messages\RefundResponse;
-use Omnipay\PosNet\Messages\VoidResponse;
+use Omnipay\PosNet\Messages\PurchaseRequest;
+use Omnipay\PosNet\Messages\RefundRequest;
+use Omnipay\PosNet\Messages\VoidRequest;
 use Omnipay\PosNet\PosNetGateway;
 use Omnipay\Tests\GatewayTestCase;
 
@@ -34,7 +33,7 @@ class PosNetGatewayTest extends GatewayTestCase
         $this->gateway->setMerchantId('6797752273');
         $this->gateway->setTerminalId('67537267');
         $this->gateway->setPosNetId('28440');
-        $this->gateway->setOosTdsServiceUrl('https://setmpos.ykb.com/PosnetWebService/XML');
+        $this->gateway->setOosTdsServiceUrl('https://setmpos.ykb.com/3DSWebService/YKBPaymentService');
         $this->gateway->setEncKey('10,10,10,10,10,10,10,10');
         $this->gateway->setTestMode(true);
         $this->gateway->setCurrency('TRY');
@@ -43,8 +42,8 @@ class PosNetGatewayTest extends GatewayTestCase
     public function testPurchase3D(): void
     {
         $paymentCard = [
-            'number' => '4506349116608409',
-            'expiryMonth' => '03',
+            'number' => '5400617024479160',
+            'expiryMonth' => '11',
             'expiryYear' => '2024',
             'cvv' => '000',
             'billingFirstName' => 'john',
@@ -56,29 +55,37 @@ class PosNetGatewayTest extends GatewayTestCase
             // 'mid' => $this->gateway->getMerchantId(),
             // 'tid' => $this->gateway->getTerminalId(),
             'tranType' => 'Sale',
-            'amount' => 36.00,
-            'orderID' => 'YKB_0000080603143050',
+            'amount' => 100.00,
+            // 'orderID' => 'test-0200000000000000000',
+            'xid' => 'YKB_COMP_TEST4567890', // Must has size of 20 characters exactly
             'installment' => '00',
             'card' => $paymentCard,
-            'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
+            'merchantReturnUrl' => 'http://test.domain.com/payment',
             'websiteUrl' => 'https://omnipay.com',
-            'paymentType' => '3d' // '3d', 'direct'
+            'paymentMethod' => '3d' // '3d', 'direct'
         ];
-        /** @var Purchase3DResponse $response */
+        /** @var PurchaseRequest $request */
+        $request = $this->gateway->purchase($this->parameters);
+        self::assertInstanceOf(PurchaseRequest::class, $request);
+        self::assertSame('YKB_COMP_TEST4567890', $request->getXid());
+        /*
+        // @var Purchase3DResponse $response
         $response = $this->gateway->purchase($this->parameters)->send();
+        var_dump($response->getRedirectData());
+        var_dump($response->getHtml());
         if ($response->isSuccessful()) {
             self::assertNotEmpty($response->getHtml());
         }
-        self::assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());*/
     }
 
     public function testPurchase(): void
     {
         $paymentCard = [
-            'number' => '5170410000000004',
-            'expiryMonth' => '12',
-            'expiryYear' => '2030',
-            'cvv' => '123',
+            'number' => '5400617024479160',
+            'expiryMonth' => '11',
+            'expiryYear' => '2024',
+            'cvv' => '00',
             'billingFirstName' => 'john',
             'billingLastName' => 'doe'
 
@@ -90,7 +97,7 @@ class PosNetGatewayTest extends GatewayTestCase
             'tranType' => 'Sale',
             'tranDateRequired' => '1',
             'amount' => 100.00,
-            'orderID' => '000012345678901234567890',
+            'orderID' => 'test-0100000000000000000',
             'installment' => '00',
             'card' => $paymentCard,
             'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
@@ -102,36 +109,47 @@ class PosNetGatewayTest extends GatewayTestCase
             // 'vkn' => '',
             // 'subDealerCode' => '',
         ];
-        /** @var PurchaseResponse $response */
+        /** @var PurchaseRequest $request */
+        $request = $this->gateway->purchase($this->parameters);
+        self::assertInstanceOf(PurchaseRequest::class, $request);
+        self::assertSame('test-0100000000000000000', $request->getOrderID());
+        /*
+        // @var PurchaseResponse $response
         $response = $this->gateway->purchase($this->parameters)->send();
         var_dump($response->getTransactionReference());
-        self::assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());*/
     }
 
+    /**
+     * @throws MacValidationException
+     */
     public function testCompletePurchase(): void
     {
         $this->parameters = [
-            // 'mid' => $this->gateway->getMerchantId(),
-            // 'tid' => $this->gateway->getTerminalId(),
-            'merchantPacket' => '1B0C0D5DC36A7F2286AC08D90ECD920419D6D346DFEE4015E173D533DE4208BB5AEB62478E0B462731AA7BECADD84D37E76B306DDD4088E0C6B843D89529E6A74B2B07514C71D72ABC4F5F2EBF560C7829336CD079AFE2A2A24ABD822DBB6627FF10DF1B245889216D352A8486F685E336F9E99D321C47BF449C6465307B2B31D8DEF4F2647E582D1BF2E2737E248558DC0CFF3C9B892426B494ACD56BD62D49366B3B85FCDDE8F073A791E0D9EA784F3B8AF6E57B80712B7A560C03C102678C0E5DB94F76017D9AB13F5549',
+            'merchantPacket' => '28A279A58EB3606E5CC5A7931216416DB1C8B314B73A2287D1B6E98403B0D5EBBD618869E453E5C2975B0288326FC3E6F0A311E1A1DBC8F9A6685DB24B990C62F27D1792C4518922A0695AAF5541D72C0DCB2A2F68472972F697E90459421BDEA5F41C8711343D1F366102FD2699C7F0F600508DA242F8629D0AE5661492EAA7F929615DE93CB71501BC15B4359BEA30F9C0E8062746670C02351251902F5C0ED98DA576589F183322B35E6B5CB5BBD1F1207FD9A99BF83C5E27EA6DB19B76238F46737280DAFBA68CFB5390',
             // merchantData
-            'bankPacket' => '8DFEA7222BC487C8370F76B1EF7F2443A86626248BBCB3FB332EB15A2A561896B265580BC4EEE3551F93628EE22842614680689B4D376444C196084A0B2D02C9E77383B243AF1F22A1487DA4874A3B38A048B00F0D09575FE5357621649D693A2AFB68444148DDA096437C6A37042A6577152D5C5014098D7C42970AFFA6F474108B89AA8708AFF47A2265A0',
+            'bankPacket' => '95E656A1A17DFA4139048DFFD2F855BC106F06F2B330F2006507E11F517FD0A313B9D49FF3CAE3FEB251B74B8171C6156EF9B0FC8AFBE77F8FC3C6296F38C2FFEE496583BB7B33252B0A1B78B31B7C99D6A99B8A752B93AC8102091C025729C8BF0C57AFDF73AB51A95F0F5B3D6DB125014F261CBD6171D0C9631ABC41A3686D0D847223487356AD08AABCA2',
             // bankData
-            'sign' => '7D12250A1313A3E7C71192371EFC71F2',
-            'ccPrefix' => '517041',
+            'sign' => 'FF9151DD5D217B8D9CA128D3134DDCBB',
+            'ccPrefix' => '540061',
             'tranType' => 'Sale',
-            'amount' => 24.50,
+            'amount' => 10000,
             'wpAmount' => 0,
-            'xid' => 'YpJkEnAN90rHzMDFaGjI',
-            // 'merchantId' => 'XXXXXXXX' // merchantId is already defined in Gateway object
+            'xid' => 'YKB_COMP_TEST4567890',
         ];
-        /** @var CompletePurchaseResponse $response */
+        /** @var CompletePurchaseRequest $request */
+        $request = $this->gateway->completePurchase($this->parameters);
+        self::assertInstanceOf(CompletePurchaseRequest::class, $request);
+        self::assertSame('FF9151DD5D217B8D9CA128D3134DDCBB', $request->getSign());
+        self::assertSame('YKB_COMP_TEST4567890', $request->getXid());
+        /*
+        // @var CompletePurchaseResponse $response
         try {
             $response = $this->gateway->completePurchase($this->parameters)->send();
         } catch (MacValidationException $e) {
             self::assertTrue(false);
         }
-        self::assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());*/
     }
 
     public function testRefund(): void
@@ -139,23 +157,58 @@ class PosNetGatewayTest extends GatewayTestCase
         $this->parameters = [
             'tranDateRequired' => '1',
             'amount' => 20.00,
-            'hostLogKey' => '026961487790000201'
+            'hostLogKey' => '031141836890000201'
         ];
 
-        /** @var RefundResponse $response */
+        /** @var RefundRequest $request */
+        $request = $this->gateway->refund($this->parameters);
+        self::assertInstanceOf(RefundRequest::class, $request);
+        self::assertSame('031141836890000201', $request->getHostLogKey());
+        /*
+        // @var RefundResponse $response
         $response = $this->gateway->refund($this->parameters)->send();
-        self::assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful()); */
     }
 
     public function testVoid(): void
     {
         $this->parameters = [
             'transaction' => 'sale',
-            'hostLogKey' => '026963775690000201'
+            'hostLogKey' => '031141844690000201'
         ];
 
-        /** @var VoidResponse $response */
+        /** @var VoidRequest $request */
+        $request = $this->gateway->void($this->parameters);
+        self::assertInstanceOf(VoidRequest::class, $request);
+        self::assertSame('031141844690000201', $request->getHostLogKey());
+
+        /*
+        // @var VoidResponse $response
         $response = $this->gateway->void($this->parameters)->send();
-        self::assertTrue($response->isSuccessful());
+        var_dump($response->getTransactionReference());
+        var_dump($response->getCode());
+        self::assertTrue($response->isSuccessful()); */
+    }
+
+    public function testBaseParameters(): void
+    {
+        /** @var PurchaseRequest $request */
+        $request = $this->gateway->purchase([]);
+        $request->setOrderId('xxxxx');
+        $request->setXid('xxxxx');
+        $request->setInstallment('xxxxx');
+        $request->setWpAmount('xxxxx');
+        $request->setMerchantPacket('xxxxx');
+        $request->setBankPacket('xxxxx');
+        $request->setSign('xxxxx');
+        $request->setCcPrefix('xxxxx');
+        $request->setTranType('xxxxx');
+        $request->setTranDateRequired('xxxxx');
+        $request->setHostLogKey('xxxxx');
+        $request->setMerchantReturnUrl('xxxxx');
+        $request->setWebsiteUrl('xxxxx');
+        $request->setTransaction('xxxxx');
+        $request->setAuthCode('xxxxx');
+
     }
 }

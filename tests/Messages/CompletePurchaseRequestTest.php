@@ -19,12 +19,12 @@ class CompletePurchaseRequestTest extends PosNetTestCase
 
     public function testEndpoint(): void
     {
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
-    public function testOrderId(): void
+    public function testSign(): void
     {
-        self::assertSame('', $this->request->getOrderId());
+        self::assertSame('7D12250A1313A3E7C71192371EFC71F2', $this->request->getSign());
     }
 
     public function testSendSuccess(): void
@@ -34,8 +34,10 @@ class CompletePurchaseRequestTest extends PosNetTestCase
 
         self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isRedirect());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getTransactionReference());
+        self::assertNotEmpty($response->getServiceRequestParams());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('031141873090000201', $response->getTransactionReference());
+        self::assertSame('418730', $response->getCode());
     }
 
     public function testSendError(): void
@@ -44,10 +46,9 @@ class CompletePurchaseRequestTest extends PosNetTestCase
         $response = $this->request->send();
 
         self::assertFalse($response->isSuccessful());
-        self::assertFalse($response->isRedirect());
-        self::assertSame('', $response->getTransactionReference());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getCode());
-        self::assertSame('', $response->getMessage());
+        self::assertEmpty($response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('0127', $response->getErrorCode());
+        self::assertSame('ORDERID DAHA ONCE KULLANILMIS      0127', $response->getMessage());
     }
 }

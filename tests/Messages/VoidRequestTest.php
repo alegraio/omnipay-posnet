@@ -14,17 +14,17 @@ class VoidRequestTest extends PosNetTestCase
     public function setUp(): void
     {
         $this->request = new VoidRequest($this->getHttpClient(), $this->getHttpRequest());
-        $this->request->initialize($this->getRefundParams());
+        $this->request->initialize($this->getVoidParams());
     }
 
     public function testEndpoint(): void
     {
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
-    public function testOrderId(): void
+    public function testHostLogKey(): void
     {
-        self::assertSame('', $this->request->getOrderId());
+        self::assertSame('031141836890000201', $this->request->getHostLogKey());
     }
 
     public function testSendSuccess(): void
@@ -33,9 +33,9 @@ class VoidRequestTest extends PosNetTestCase
         $response = $this->request->send();
 
         self::assertTrue($response->isSuccessful());
-        self::assertTrue($response->isCancelled());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('031141844690000201', $response->getTransactionReference());
+        self::assertSame('000000', $response->getCode());
     }
 
     public function testSendError(): void
@@ -44,10 +44,9 @@ class VoidRequestTest extends PosNetTestCase
         $response = $this->request->send();
 
         self::assertFalse($response->isSuccessful());
-        self::assertFalse($response->isCancelled());
-        self::assertSame('', $response->getTransactionReference());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getCode());
-        self::assertSame('', $response->getMessage());
+        self::assertEmpty($response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('0220', $response->getErrorCode());
+        self::assertSame('IPTAL ISLEMI YAPILMIS              0220', $response->getMessage());
     }
 }

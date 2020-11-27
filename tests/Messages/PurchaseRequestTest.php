@@ -19,7 +19,7 @@ class PurchaseRequestTest extends PosNetTestCase
 
     public function testEndpoint(): void
     {
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
     public function testOrderId(): void
@@ -35,7 +35,8 @@ class PurchaseRequestTest extends PosNetTestCase
         self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isRedirect());
         self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
-        self::assertSame('', $response->getTransactionReference());
+        self::assertSame('031141836890000201', $response->getTransactionReference());
+        self::assertSame('753497', $response->getCode());
     }
 
     public function testSendError(): void
@@ -47,7 +48,7 @@ class PurchaseRequestTest extends PosNetTestCase
         self::assertFalse($response->isRedirect());
         self::assertNull($response->getTransactionReference());
         self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
-        self::assertSame('0003', $response->getCode());
+        self::assertEmpty($response->getCode());
         self::assertSame('148 MID,TID,IP HATALI: 176.88.xxx.xx', $response->getMessage());
     }
 }

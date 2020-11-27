@@ -5,7 +5,6 @@
 
 namespace Omnipay\PosNet\Messages;
 
-use Exception;
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
 
@@ -39,16 +38,14 @@ class PurchaseRequest extends AbstractRequest
 
     /**
      * @param $data
-     * @param $statusCode
      * @return PurchaseResponse|Purchase3DResponse
-     * @throws Exception
      */
-    protected function createResponse($data, $statusCode): PurchaseResponse
+    protected function createResponse($data)
     {
         if ($this->getPaymentMethod() === self::PAYMENT_TYPE_3D) {
-            $response = new Purchase3DResponse($this, $data, $statusCode);
+            $response = new Purchase3DResponse($this, $data);
         } else {
-            $response = new PurchaseResponse($this, $data, $statusCode);
+            $response = new PurchaseResponse($this, $data);
         }
 
         $requestParams = $this->getRequestParams();

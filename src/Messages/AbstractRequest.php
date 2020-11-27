@@ -59,7 +59,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest i
             $body);
 
         $response = (string)$httpRequest->getBody()->getContents();
-        return $this->createResponse($response, $httpRequest->getStatusCode());
+        return $this->createResponse($response);
     }
 
     public function getPurchaseRequestParams(): array
@@ -96,7 +96,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest i
             'tid' => $this->getTerminalId(),
             $this->action => [
                 'posnetid' => $this->getPosNetId(),
-                'XID' => $this->getXidByOrderId(),
+                'XID' => $this->getXid(),
                 'amount' => $this->getAmountInteger(),
                 'currencyCode' => $this->getMatchingCurrency(),
                 'installment' => $this->getInstallment(),
@@ -211,7 +211,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest i
     {
         $sensitiveData = $this->getSensitiveData();
 
-        if (\in_array($key, $sensitiveData, true)) {
+        if (in_array($key, $sensitiveData, true)) {
             $data = Mask::mask($data);
         }
 

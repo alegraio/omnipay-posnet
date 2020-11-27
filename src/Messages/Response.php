@@ -5,7 +5,6 @@
 
 namespace Omnipay\PosNet\Messages;
 
-use Exception;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Common\Message\RequestInterface;
@@ -21,10 +20,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      * Response constructor.
      * @param RequestInterface $request
      * @param $data
-     * @param int $statusCode
-     * @throws Exception
      */
-    public function __construct(RequestInterface $request, $data, $statusCode = 200)
+    public function __construct(RequestInterface $request, $data)
     {
         parent::__construct($request, $data);
         $parsedXML = @simplexml_load_string($this->data);
@@ -53,6 +50,11 @@ class Response extends AbstractResponse implements RedirectResponseInterface
     }
 
     public function getCode(): ?string
+    {
+        return $this->data['authCode'] ?? null;
+    }
+
+    public function getErrorCode(): ?string
     {
         return $this->data['respCode'] ?? null;
     }

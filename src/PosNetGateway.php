@@ -33,6 +33,17 @@ class PosNetGateway extends AbstractGateway
 
     use BaseParametersTrait;
 
+    public function getDefaultParameters(): array
+    {
+        return [
+          'merchantId' => '',
+          'terminalId' => '',
+          'posNetId' => '',
+          'encKey' => '',
+          'oosTdsServiceUrl' => '',
+        ];
+    }
+
     /**
      * Get gateway display name
      *
@@ -61,7 +72,7 @@ class PosNetGateway extends AbstractGateway
     public function completePurchase(array $parameters = [])
     {
         $macValidationResponse = $this->createRequest(MacValidationRequest::class, $parameters)->send();
-        if ($macValidationResponse->isSuccessful() && $macValidationResponse->getMdStatus() === 1) {
+        if ($macValidationResponse->isSuccessful() && (($this->getTestMode() && $macValidationResponse->getMdStatus() === 9) || $macValidationResponse->getMdStatus() === 1)) {
             return $this->createRequest(CompletePurchaseRequest::class, $parameters);
         }
 

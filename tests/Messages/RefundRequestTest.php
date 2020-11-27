@@ -19,12 +19,12 @@ class RefundRequestTest extends PosNetTestCase
 
     public function testEndpoint(): void
     {
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
     }
 
-    public function testOrderId(): void
+    public function testHostLogKey(): void
     {
-        self::assertSame('', $this->request->getOrderId());
+        self::assertSame('031141836890000201', $this->request->getHostLogKey());
     }
 
     public function testSendSuccess(): void
@@ -34,8 +34,9 @@ class RefundRequestTest extends PosNetTestCase
 
         self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isRedirect());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('019799179990000191', $response->getTransactionReference());
+        self::assertSame('991799', $response->getCode());
     }
 
     public function testSendError(): void
@@ -44,10 +45,10 @@ class RefundRequestTest extends PosNetTestCase
         $response = $this->request->send();
 
         self::assertFalse($response->isSuccessful());
-        self::assertFalse($response->isRedirect());
-        self::assertSame('', $response->getTransactionReference());
-        self::assertSame('https://setmpos.ykb.com/3DSWebService/YKBPaymentService', $this->request->getEndpoint());
-        self::assertSame('', $response->getCode());
-        self::assertSame('', $response->getMessage());
+        self::assertSame('031141836890000201', $response->getTransactionReference());
+        self::assertSame('https://setmpos.ykb.com/PosnetWebService/XML', $this->request->getEndpoint());
+        self::assertSame('753497', $response->getCode());
+        self::assertSame('0205', $response->getErrorCode());
+        self::assertSame('GECERSIZ TUTAR                     0205', $response->getMessage());
     }
 }

@@ -67,16 +67,6 @@ trait BaseParametersTrait
         return ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
     }
 
-    public function getPaymentType(): ?string
-    {
-        return $this->getParameter('paymentType');
-    }
-
-    public function setPaymentType(string $paymentType)
-    {
-        return $this->setParameter('paymentType', $paymentType);
-    }
-
     public function getOrderID(): ?string
     {
         return $this->getParameter('orderID');
@@ -85,11 +75,6 @@ trait BaseParametersTrait
     public function setOrderId(string $orderId)
     {
         return $this->setParameter('orderID', $orderId);
-    }
-
-    public function getXidByOrderId(): string
-    {
-        return str_pad($this->getOrderID(), 20, '0', STR_PAD_LEFT);
     }
 
     public function setXid(string $xid)
@@ -154,7 +139,7 @@ trait BaseParametersTrait
 
     public function getCcPrefix(): string
     {
-        return $this->getParameter('sign');
+        return $this->getParameter('ccPrefix');
     }
 
     public function setCcPrefix($ccPrefix)
@@ -251,7 +236,7 @@ trait BaseParametersTrait
         $encKey = $this->getEncKey();
         $terminalID = $this->getTerminalId();
         $xid = $this->getXid();
-        $amount = $this->getAmountInteger();
+        $amount = $this->getParameter('amount');
         $currency = $this->getMatchingCurrency();
         $merchantId = $this->getMerchantId();
         $firstHash = $this->hashString($encKey . ';' . $terminalID);

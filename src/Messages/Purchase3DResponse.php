@@ -61,20 +61,26 @@ class Purchase3DResponse extends Response
         $posnetData = $responseData['oosRequestDataResponse']['data1'];
         $posnetData2 = $responseData['oosRequestDataResponse']['data2'];
         $digest = $responseData['oosRequestDataResponse']['sign'];
+
+        /** @var PurchaseRequest $request */
+        $request = $this->request;
+
         $requestParameters = $this->request->getParameters();
+
         $this->parameters = $this->parameters ?? $requestParameters;
+
         $formData = [
-            'mid' => $this->parameters['merchantId'],
-            'posnetID' => $this->parameters['posNetId'],
+            'mid' => $request->getMerchantId(),
+            'posnetID' => $request->getPosNetId(),
             'posnetData' => $posnetData,
             'posnetData2' => $posnetData2,
             'digest' => $digest,
             'vftCode' => $this->parameters['vftCode'] ?? '',
-            'merchantReturnURL' => $this->parameters['merchantReturnUrl'],
+            'merchantReturnURL' => $request->getMerchantReturnUrl(),
             'lang' => 'tr',
-            'url' => $this->parameters['websiteUrl'],
+            'url' => $request->getWebsiteUrl(),
             'openANewWindow' => '0',
-            'oosTdsServiceUrl' => $this->request->getOosTdsServiceUrl()
+            'oosTdsServiceUrl' => $request->getOosTdsServiceUrl()
         ];
         if (isset($this->parameters['useJokerVadaa'])) {
             $formData['useJokerVadaa'] = $this->parameters['useJokerVadaa'];
