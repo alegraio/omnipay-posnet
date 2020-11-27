@@ -178,6 +178,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest i
         }
         return $data;
     }
+
     /**
      * Get HTTP Method.
      *
@@ -214,7 +215,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest i
         if (in_array($key, $sensitiveData, true)) {
             $data = Mask::mask($data);
         }
-
     }
 
     /**

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\PosNet\Messages;
-
 
 trait BaseParametersTrait
 {

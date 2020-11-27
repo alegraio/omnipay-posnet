@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Refund Request
- */
 
 namespace Omnipay\PosNet\Messages;
 
@@ -26,6 +23,7 @@ class RefundRequest extends AbstractRequest
     /**
      * @param $data
      * @return RefundResponse
+     * @throws \JsonException
      */
     protected function createResponse($data): RefundResponse
     {

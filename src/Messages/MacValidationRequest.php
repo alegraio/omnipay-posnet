@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Mac Validation Request
- */
 
 namespace Omnipay\PosNet\Messages;
 
@@ -28,6 +25,7 @@ class MacValidationRequest extends AbstractRequest
     /**
      * @param $data
      * @return MacValidationResponse
+     * @throws \JsonException
      */
     protected function createResponse($data): MacValidationResponse
     {
@@ -37,7 +35,6 @@ class MacValidationRequest extends AbstractRequest
 
         return $response;
     }
-
 
     /**
      * @return string

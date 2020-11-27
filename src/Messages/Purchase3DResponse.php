@@ -1,10 +1,6 @@
 <?php
-/**
- * PosNet Authorize Response
- */
 
 namespace Omnipay\PosNet\Messages;
-
 
 use DOMDocument;
 

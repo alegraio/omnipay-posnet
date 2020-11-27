@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Purchase Response
- */
 
 namespace Omnipay\PosNet\Messages;
 

@@ -1,7 +1,4 @@
 <?php
-/*
- * PosNet Complete Purchase Request
- */
 
 namespace Omnipay\PosNet\Messages;
 
@@ -29,6 +26,7 @@ class CompletePurchaseRequest extends AbstractRequest
     /**
      * @param $data
      * @return CompletePurchaseResponse
+     * @throws \JsonException
      */
     protected function createResponse($data): CompletePurchaseResponse
     {

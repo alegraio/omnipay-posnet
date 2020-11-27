@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Mac Validation Response
- */
 
 namespace Omnipay\PosNet\Messages;
 

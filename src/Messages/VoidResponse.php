@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Void Response
- */
 
 namespace Omnipay\PosNet\Messages;
 

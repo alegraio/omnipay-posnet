@@ -1,7 +1,4 @@
 <?php
-/**
- * PosNet Void Request
- */
 
 namespace Omnipay\PosNet\Messages;
 
@@ -26,6 +23,7 @@ class VoidRequest extends AbstractRequest
     /**
      * @param $data
      * @return VoidResponse
+     * @throws \JsonException
      */
     protected function createResponse($data): VoidResponse
     {
@@ -35,7 +33,6 @@ class VoidRequest extends AbstractRequest
 
         return $response;
     }
-
 
     /**
      * @return string
