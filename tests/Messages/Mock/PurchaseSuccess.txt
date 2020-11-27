@@ -1,0 +1,28 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 27 Nov 2020 09:35:14 GMT
+Content-Language: "tr-TR"
+Content-Type: text/html; charset=utf-8
+Content-Length: 450
+Set-Cookie: JSESSIONID=0000BcmQRcnP9fmZOD9DY5DFtsU:17n7hd4lf; HTTPOnly; Path=/; Secure
+Vary: Accept-Encoding
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Cache-Control: no-cache="set-cookie, set-cookie2"
+
+<?xml version='1.0' encoding='iso-8859-9'?>
+<posnetResponse>
+<approved>1</approved>
+<hostlogkey>031141836890000201</hostlogkey>
+<authCode>753497</authCode>
+<tranDate>201127141937</tranDate>
+<instInfo>
+<inst1>00</inst1>
+<amnt1>000000000000</amnt1>
+</instInfo>
+<pointInfo>
+<point>00000000</point>
+<pointAmount>000000000000</pointAmount>
+<totalPoint>00000000</totalPoint>
+<totalPointAmount>000000000000</totalPointAmount>
+</pointInfo>
+</posnetResponse>

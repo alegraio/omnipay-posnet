@@ -1,0 +1,18 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 27 Nov 2020 09:35:14 GMT
+Content-Language: "tr-TR"
+Content-Type: text/html; charset=utf-8
+Content-Length: 291
+Set-Cookie: JSESSIONID=0000BcmQRcnP9fmZOD9DY5DFtsU:17n7hd4lf; HTTPOnly; Path=/; Secure
+Vary: Accept-Encoding
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Cache-Control: no-cache="set-cookie, set-cookie2"
+
+<?xml version='1.0' encoding='iso-8859-9'?>
+<posnetResponse>
+<approved>0</approved>
+<respCode>0220</respCode>
+<respText>IPTAL ISLEMI YAPILMIS              0220</respText>
+<yourIP>176.88.133.91</yourIP>
+</posnetResponse>

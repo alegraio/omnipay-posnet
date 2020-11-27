@@ -14,12 +14,13 @@ trait BaseParametersTrait
     ];
     public $encKey = '10,10,10,10,10,10,10,10';
 
+
     public function setMerchantId(string $merchantId)
     {
         return $this->setParameter('merchantId', $merchantId);
     }
 
-    public function getMerchantId(): string
+    public function getMerchantId(): ?string
     {
         return $this->getParameter('merchantId');
     }
@@ -29,7 +30,7 @@ trait BaseParametersTrait
         return $this->setParameter('terminalId', $terminalId);
     }
 
-    public function getTerminalId(): string
+    public function getTerminalId(): ?string
     {
         return $this->getParameter('terminalId');
     }
@@ -39,7 +40,7 @@ trait BaseParametersTrait
         return $this->setParameter('posNetId', $posNetId);
     }
 
-    public function getPosNetId(): string
+    public function getPosNetId(): ?string
     {
         return $this->getParameter('posNetId');
     }
@@ -51,7 +52,7 @@ trait BaseParametersTrait
     }
 
 
-    public function getEncKey(): string
+    public function getEncKey(): ?string
     {
         $encKey = $this->getParameter('encKey');
         return $encKey ?? $this->encKey;
@@ -62,25 +63,9 @@ trait BaseParametersTrait
         return $this->setParameter('oosTdsServiceUrl', $tdsServiceUrl);
     }
 
-    public function getXmlServiceUrl(): string
+    public function getEndpoint(): ?string
     {
-        $serviceUrl = ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
-        return $this->getParameter('xmlServiceUrl') ?? $serviceUrl;
-    }
-
-    public function setXmlServiceUrl(string $xmlServiceUrl)
-    {
-        return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
-    }
-
-    public function getPaymentType(): ?string
-    {
-        return $this->getParameter('paymentType');
-    }
-
-    public function setPaymentType(string $paymentType)
-    {
-        return $this->setParameter('paymentType', $paymentType);
+        return ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
     }
 
     public function getOrderID(): ?string
@@ -93,22 +78,17 @@ trait BaseParametersTrait
         return $this->setParameter('orderID', $orderId);
     }
 
-    public function getXidByOrderId(): string
-    {
-        return str_pad($this->getOrderID(), 20, '0', STR_PAD_LEFT);
-    }
-
     public function setXid(string $xid)
     {
         return $this->setParameter('xid', $xid);
     }
 
-    public function getXid(): string
+    public function getXid(): ?string
     {
         return $this->getParameter('xid');
     }
 
-    public function getInstallment(): string
+    public function getInstallment(): ?string
     {
         return $this->getParameter('installment');
     }
@@ -118,7 +98,7 @@ trait BaseParametersTrait
         return $this->setParameter('installment', $installment);
     }
 
-    public function getWpAmount(): string
+    public function getWpAmount(): ?string
     {
         return $this->getParameter('wpAmount');
     }
@@ -128,7 +108,7 @@ trait BaseParametersTrait
         return $this->setParameter('wpAmount', $wpAmount);
     }
 
-    public function getMerchantPacket(): string
+    public function getMerchantPacket(): ?string
     {
         return $this->getParameter('merchantPacket');
     }
@@ -138,7 +118,7 @@ trait BaseParametersTrait
         return $this->setParameter('merchantPacket', $merchantPacket);
     }
 
-    public function getBankPacket(): string
+    public function getBankPacket(): ?string
     {
         return $this->getParameter('bankPacket');
     }
@@ -148,7 +128,7 @@ trait BaseParametersTrait
         return $this->setParameter('bankPacket', $bankPacket);
     }
 
-    public function getSign(): string
+    public function getSign(): ?string
     {
         return $this->getParameter('sign');
     }
@@ -158,9 +138,9 @@ trait BaseParametersTrait
         return $this->setParameter('sign', $sign);
     }
 
-    public function getCcPrefix(): string
+    public function getCcPrefix(): ?string
     {
-        return $this->getParameter('sign');
+        return $this->getParameter('ccPrefix');
     }
 
     public function setCcPrefix($ccPrefix)
@@ -168,7 +148,7 @@ trait BaseParametersTrait
         return $this->setParameter('ccPrefix', $ccPrefix);
     }
 
-    public function getTranType(): string
+    public function getTranType(): ?string
     {
         return $this->getParameter('tranType');
     }
@@ -194,7 +174,7 @@ trait BaseParametersTrait
      *
      * @return string
      */
-    public function getTranDateRequired(): string
+    public function getTranDateRequired(): ?string
     {
         return $this->getParameter('tranDateRequired');
     }
@@ -252,12 +232,12 @@ trait BaseParametersTrait
     /**
      * @return string
      */
-    public function getMac(): string
+    public function getMac(): ?string
     {
         $encKey = $this->getEncKey();
         $terminalID = $this->getTerminalId();
         $xid = $this->getXid();
-        $amount = $this->getAmountInteger();
+        $amount = $this->getParameter('amount');
         $currency = $this->getMatchingCurrency();
         $merchantId = $this->getMerchantId();
         $firstHash = $this->hashString($encKey . ';' . $terminalID);

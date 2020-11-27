@@ -1,0 +1,29 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Fri, 27 Nov 2020 09:35:14 GMT
+Content-Language: "tr-TR"
+Content-Type: text/html; charset=utf-8
+Content-Length: 217
+Set-Cookie: JSESSIONID=0000BcmQRcnP9fmZOD9DY5DFtsU:17n7hd4lf; HTTPOnly; Path=/; Secure
+Vary: Accept-Encoding
+Expires: Thu, 01 Dec 1994 16:00:00 GMT
+Cache-Control: no-cache="set-cookie, set-cookie2"
+
+<?xml version='1.0' encoding='iso-8859-9'?>
+<posnetResponse>
+<approved>1</approved>
+<respCode></respCode>
+<respText></respText>
+<oosResolveMerchantDataResponse>
+<amount>10000</amount>
+<currency>TL</currency>
+<installment>00</installment>
+<xid>12345678901234567890</xid>
+<point>0</point>
+<pointAmount>0</pointAmount>
+<txStatus>N</txStatus>
+<mdStatus>9</mdStatus>
+<mdErrorMessage>None 3D - Secure Transaction</mdErrorMessage>
+<mac>u08ENxSy/9Bi04MJ2IgbUWfg/LalRlGXjcLl7X0b+dg=</mac>
+</oosResolveMerchantDataResponse>
+</posnetResponse>

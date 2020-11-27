@@ -20,27 +20,46 @@ class MacValidationRequest extends AbstractRequest
      */
     public function getData()
     {
-        return [
-            'mid' => $this->getMerchantId(),
-            'tid' => $this->getTerminalId(),
-            $this->action => [
-                'bankData' => $this->getBankPacket(),
-                'merchantData' => $this->getMerchantPacket(),
-                'sign' => $this->getSign(),
-                'mac' => $this->getMac()
-
-            ]
-        ];
+        $data = $this->getMacValidationParams();
+        $this->setRequestParams($data);
+        return $data;
     }
 
     /**
      * @param $data
-     * @param $statusCode
      * @return MacValidationResponse
-     * @throws Exception
      */
-    protected function createResponse($data, $statusCode): MacValidationResponse
+    protected function createResponse($data): MacValidationResponse
     {
-        return new MacValidationResponse($this, $data, $statusCode);
+        $response = new MacValidationResponse($this, $data);
+        $requestParams = $this->getRequestParams();
+        $response->setServiceRequestParams($requestParams);
+
+        return $response;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getProcessName(): string
+    {
+        return 'macValidation';
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessType(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSensitiveData(): array
+    {
+        return ['mid', 'tid', 'mac'];
     }
 }

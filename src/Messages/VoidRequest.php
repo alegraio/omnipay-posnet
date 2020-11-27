@@ -18,32 +18,46 @@ class VoidRequest extends AbstractRequest
      */
     public function getData()
     {
-        $data = [
-            'mid' => $this->getMerchantId(),
-            'tid' => $this->getTerminalId(),
-            $this->action => [
-                'transaction' => $this->getTransaction(),
-                'hostLogKey' => $this->getHostLogKey()
-            ]
-        ];
-        if ($this->getAuthCode() !== null) { // Used for VFT (Transaction with different maturity)
-            $data[$this->action]['authCode'] = $this->getAuthCode();
-            return $data;
-        }
-        if ($this->getOrderID() !== null) {
-            $data[$this->action]['orderID'] = $this->getOrderID();
-        }
+        $data = $this->getVoidParams();
+        $this->setRequestParams($data);
         return $data;
     }
 
     /**
      * @param $data
-     * @param $statusCode
      * @return VoidResponse
-     * @throws Exception
      */
-    protected function createResponse($data, $statusCode): VoidResponse
+    protected function createResponse($data): VoidResponse
     {
-        return new VoidResponse($this, $data, $statusCode);
+        $response = new VoidResponse($this, $data);
+        $requestParams = $this->getRequestParams();
+        $response->setServiceRequestParams($requestParams);
+
+        return $response;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getProcessName(): string
+    {
+        return 'void';
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessType(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSensitiveData(): array
+    {
+        return ['mid', 'tid'];
     }
 }

@@ -18,34 +18,47 @@ class RefundRequest extends AbstractRequest
      */
     public function getData()
     {
-        $data = [
-            'mid' => $this->getMerchantId(),
-            'tid' => $this->getTerminalId(),
-            'tranDateRequired' => $this->getTranDateRequired(),
-            $this->action => [
-                'amount' => $this->getAmountInteger(),
-                'currencyCode' => $this->getMatchingCurrency()
-            ]
-        ];
-        if ($this->getHostLogKey() !== null) {
-            $data[$this->action]['hostLogKey'] = $this->getHostLogKey();
-            return $data;
-        }
-        if ($this->getOrderID() !== null) {
-            $data[$this->action]['orderID'] = $this->getOrderID();
-        }
+        $data = $this->getRefundParams();
+        $this->setRequestParams($data);
         return $data;
     }
 
     /**
      * @param $data
-     * @param $statusCode
      * @return RefundResponse
-     * @throws Exception
      */
-    protected function createResponse($data, $statusCode): RefundResponse
+    protected function createResponse($data): RefundResponse
     {
-        return new RefundResponse($this, $data, $statusCode);
+        $response = new RefundResponse($this, $data);
+        $requestParams = $this->getRequestParams();
+        $response->setServiceRequestParams($requestParams);
+
+        return $response;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getProcessName(): string
+    {
+        return 'refund';
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessType(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSensitiveData(): array
+    {
+        return ['mid', 'tid'];
     }
 
 }
