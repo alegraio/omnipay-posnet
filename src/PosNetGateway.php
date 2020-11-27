@@ -9,7 +9,6 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
-use Omnipay\PosNet\Messages\AuthorizeRequest;
 use Omnipay\PosNet\Messages\BaseParametersTrait;
 use Omnipay\PosNet\Messages\MacValidationException;
 use Omnipay\PosNet\Messages\MacValidationRequest;
@@ -27,6 +26,7 @@ use Omnipay\PosNet\Messages\VoidRequest;
  * @method NotificationInterface acceptNotification(array $options = array())
  * @method RequestInterface fetchTransaction(array $options = [])
  * @method RequestInterface completeAuthorize(array $options = array())
+ * @method RequestInterface authorize(array $options = array())
  */
 class PosNetGateway extends AbstractGateway
 {
@@ -48,22 +48,8 @@ class PosNetGateway extends AbstractGateway
      * @param array $parameters
      * @return AbstractRequest|RequestInterface
      */
-    public function authorize(array $parameters = [])
-    {
-        return $this->createRequest(AuthorizeRequest::class, $parameters);
-    }
-
-    /**
-     * @param array $parameters
-     * @return AbstractRequest|RequestInterface
-     */
     public function purchase(array $parameters = [])
     {
-        $i = $parameters['paymentType'] ?? null;
-        if ($i === '3d') {
-            return $this->createRequest(AuthorizeRequest::class, $parameters);
-        }
-
         return $this->createRequest(PurchaseRequest::class, $parameters);
     }
 

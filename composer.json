@@ -16,6 +16,11 @@
     "ext-simplexml": "*",
     "ext-dom": "*"
   },
+  "autoload-dev": {
+    "psr-4": {
+      "OmnipayTest\\PosNet\\": "tests/"
+    }
+  },
   "require-dev": {
     "omnipay/tests": "^3",
     "squizlabs/php_codesniffer": "^3",

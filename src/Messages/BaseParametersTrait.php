@@ -62,15 +62,9 @@ trait BaseParametersTrait
         return $this->setParameter('oosTdsServiceUrl', $tdsServiceUrl);
     }
 
-    public function getXmlServiceUrl(): string
+    public function getEndpoint(): string
     {
-        $serviceUrl = ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
-        return $this->getParameter('xmlServiceUrl') ?? $serviceUrl;
-    }
-
-    public function setXmlServiceUrl(string $xmlServiceUrl)
-    {
-        return $this->setParameter('xmlServiceUrl', $xmlServiceUrl);
+        return ($this->getTestMode()) ? $this->xmlServiceUrls['test'] : $this->xmlServiceUrls['live'];
     }
 
     public function getPaymentType(): ?string

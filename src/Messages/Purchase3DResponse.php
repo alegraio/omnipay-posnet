@@ -8,7 +8,7 @@ namespace Omnipay\PosNet\Messages;
 
 use DOMDocument;
 
-class AuthorizeResponse extends Response
+class Purchase3DResponse extends Response
 {
 
     use BaseParametersTrait;

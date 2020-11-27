@@ -1,9 +1,9 @@
 <?php
 
-namespace Omnipay\Tests;
+namespace OmnipayTest\PosNet;
 
 
-use Omnipay\PosNet\Messages\AuthorizeResponse;
+use Omnipay\PosNet\Messages\Purchase3DResponse;
 use Omnipay\PosNet\Messages\CompletePurchaseResponse;
 use Omnipay\PosNet\Messages\HelperTrait;
 use Omnipay\PosNet\Messages\MacValidationException;
@@ -11,8 +11,9 @@ use Omnipay\PosNet\Messages\PurchaseResponse;
 use Omnipay\PosNet\Messages\RefundResponse;
 use Omnipay\PosNet\Messages\VoidResponse;
 use Omnipay\PosNet\PosNetGateway;
+use Omnipay\Tests\GatewayTestCase;
 
-class GatewayTest extends GatewayTestCase
+class PosNetGatewayTest extends GatewayTestCase
 {
     use HelperTrait;
 
@@ -30,45 +31,16 @@ class GatewayTest extends GatewayTestCase
     {
         /** @var PosNetGateway gateway */
         $this->gateway = new PosNetGateway(null, $this->getHttpRequest());
-        $this->gateway->setMerchantId(getenv('MERCHANT_ID'));
-        $this->gateway->setTerminalId(getenv('TERMINAL_ID'));
-        $this->gateway->setPosNetId(getenv('POSNET_ID'));
-        $this->gateway->setOosTdsServiceUrl(getenv('TDS_SERVICE_URL'));
-        $this->gateway->setEncKey(getenv('ENC_KEY'));
+        $this->gateway->setMerchantId('6797752273');
+        $this->gateway->setTerminalId('67537267');
+        $this->gateway->setPosNetId('28440');
+        $this->gateway->setOosTdsServiceUrl('https://setmpos.ykb.com/PosnetWebService/XML');
+        $this->gateway->setEncKey('10,10,10,10,10,10,10,10');
         $this->gateway->setTestMode(true);
         $this->gateway->setCurrency('TRY');
     }
 
-    public function testAuthorize(): void
-    {
-        $paymentCard = [
-            'number' => '4506349116608409',
-            'expiryMonth' => '03',
-            'expiryYear' => '2024',
-            'cvv' => '000',
-            'billingFirstName' => 'john',
-            'billingLastName' => 'doe'
-
-        ];
-
-        $this->parameters = [
-            // 'mid' => $this->gateway->getMerchantId(),
-            // 'tid' => $this->gateway->getTerminalId(),
-            'tranType' => 'Sale',
-            'amount' => 36.00,
-            'orderID' => 'YKB_0000080603143050',
-            'installment' => '00',
-            'card' => $paymentCard,
-            'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
-            'websiteUrl' => 'https://omnipay.com'
-        ];
-        /** @var AuthorizeResponse $response */
-        $response = $this->gateway->authorize($this->parameters)->send();
-        $this->assertNotEmpty($response->getData());
-        $this->assertTrue($response->isSuccessful());
-    }
-
-    public function testThreeDSForm(): void
+    public function testPurchase3D(): void
     {
         $paymentCard = [
             'number' => '4506349116608409',
@@ -92,12 +64,12 @@ class GatewayTest extends GatewayTestCase
             'websiteUrl' => 'https://omnipay.com',
             'paymentType' => '3d' // '3d', 'direct'
         ];
-        /** @var AuthorizeResponse $response */
-        $response = $this->gateway->authorize($this->parameters)->send();
+        /** @var Purchase3DResponse $response */
+        $response = $this->gateway->purchase($this->parameters)->send();
         if ($response->isSuccessful()) {
-            $this->assertNotEmpty($response->getHtml());
+            self::assertNotEmpty($response->getHtml());
         }
-        $this->assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
     }
 
     public function testPurchase(): void
@@ -117,23 +89,23 @@ class GatewayTest extends GatewayTestCase
             // 'tid' => $this->gateway->getTerminalId(),
             'tranType' => 'Sale',
             'tranDateRequired' => '1',
-            'amount' => 24.50,
-            'orderID' => $this->getRandomString(20),
+            'amount' => 100.00,
+            'orderID' => '000012345678901234567890',
             'installment' => '00',
             'card' => $paymentCard,
             'merchantReturnUrl' => 'https://posnet.omnipay.com/payment',
             'websiteUrl' => 'https://omnipay.com',
-            'paymentType' => 'direct' // '3d', 'direct'
+            'paymentMethod' => 'direct' // '3d', 'direct'
             // 'koiCode' => '',
             // 'subMrcId' => '',
             // 'tckn' => '',
             // 'vkn' => '',
             // 'subDealerCode' => '',
         ];
-        /** @var PurchaseResponse|AuthorizeResponse $response */
+        /** @var PurchaseResponse $response */
         $response = $this->gateway->purchase($this->parameters)->send();
         var_dump($response->getTransactionReference());
-        $this->assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
     }
 
     public function testCompletePurchase(): void
@@ -157,9 +129,9 @@ class GatewayTest extends GatewayTestCase
         try {
             $response = $this->gateway->completePurchase($this->parameters)->send();
         } catch (MacValidationException $e) {
-            $this->assertTrue(false);
+            self::assertTrue(false);
         }
-        $this->assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
     }
 
     public function testRefund(): void
@@ -172,7 +144,7 @@ class GatewayTest extends GatewayTestCase
 
         /** @var RefundResponse $response */
         $response = $this->gateway->refund($this->parameters)->send();
-        $this->assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
     }
 
     public function testVoid(): void
@@ -184,6 +156,6 @@ class GatewayTest extends GatewayTestCase
 
         /** @var VoidResponse $response */
         $response = $this->gateway->void($this->parameters)->send();
-        $this->assertTrue($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
     }
 }

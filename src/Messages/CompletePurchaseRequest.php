@@ -20,15 +20,10 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     public function getData()
     {
-        return [
-            'mid' => $this->getMerchantId(),
-            'tid' => $this->getTerminalId(),
-            $this->action => [
-                'bankData' => $this->getBankPacket(),
-                'wpAmount' => $this->getWpAmount(),
-                'mac' => $this->getMac()
-            ]
-        ];
+        $data = $this->getCompletePurchaseParams();
+        $this->setRequestParams($data);
+        return $data;
+
     }
 
     /**
@@ -39,6 +34,34 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     protected function createResponse($data, $statusCode): CompletePurchaseResponse
     {
-        return new CompletePurchaseResponse($this, $data, $statusCode);
+        $response = new CompletePurchaseResponse($this, $data, $statusCode);
+        $requestParams = $this->getRequestParams();
+        $response->setServiceRequestParams($requestParams);
+
+        return $response;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessName(): string
+    {
+        return 'completePurchase';
+    }
+
+    /**
+     * @return string
+     */
+    public function getProcessType(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSensitiveData(): array
+    {
+        return ['mid', 'tid', 'mac'];
     }
 }
