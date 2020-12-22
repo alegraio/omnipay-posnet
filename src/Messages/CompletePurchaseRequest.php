@@ -3,6 +3,7 @@
 namespace Omnipay\PosNet\Messages;
 
 use Exception;
+use Omnipay\Common\Exception\RuntimeException;
 
 class CompletePurchaseRequest extends AbstractRequest
 {
@@ -19,6 +20,9 @@ class CompletePurchaseRequest extends AbstractRequest
     {
         $data = $this->getCompletePurchaseParams();
         $this->setRequestParams($data);
+        if (!empty($this->getMacValidationError())) {
+            throw new RuntimeException($this->getMacValidationError());
+        }
         return $data;
 
     }

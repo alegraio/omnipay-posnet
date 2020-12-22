@@ -117,6 +117,10 @@ class PosNetGateway extends AbstractGateway
      */
     public function completePurchase(array $parameters = [])
     {
+        $macValidationResponse = $this->createRequest(MacValidationRequest::class, $parameters)->send();
+        if (!$macValidationResponse->isSuccessful() && $macValidationResponse->getMdStatus() === 1) {
+            $parameters['macValidationError'] = json_encode($macValidationResponse->getData(), JSON_THROW_ON_ERROR);
+        }
         return $this->createRequest(CompletePurchaseRequest::class, $parameters);
 
     }

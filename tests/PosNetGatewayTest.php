@@ -5,6 +5,7 @@ namespace OmnipayTest\PosNet;
 
 use Omnipay\PosNet\Messages\CompletePurchaseRequest;
 use Omnipay\PosNet\Messages\HelperTrait;
+use Omnipay\PosNet\Messages\MacValidationException;
 use Omnipay\PosNet\Messages\MacValidationResponse;
 use Omnipay\PosNet\Messages\PurchaseRequest;
 use Omnipay\PosNet\Messages\RefundRequest;
@@ -135,17 +136,15 @@ class PosNetGatewayTest extends GatewayTestCase
             'wpAmount' => 0,
             'xid' => 'YKB_COMP_TEST4567890',
         ];
-        /** @var MacValidationResponse $macValidationResponse */
-        $macValidationResponse = $this->gateway->validateMac($this->parameters)->send();
 
-        if ($macValidationResponse->isSuccessful() && (($this->gateway->getTestMode() && $macValidationResponse->getMdStatus() === 9) || $macValidationResponse->getMdStatus() === 1)) {
+        try {
             /** @var CompletePurchaseRequest $request */
             $request = $this->gateway->completePurchase($this->parameters);
             self::assertInstanceOf(CompletePurchaseRequest::class, $request);
             self::assertSame('FF9151DD5D217B8D9CA128D3134DDCBB', $request->getSign());
             self::assertSame('YKB_COMP_TEST4567890', $request->getXid());
-            } else {
-            self::assertTrue(true);
+        } catch (MacValidationException $e) {
+            self::assertTrue(false);
         }
             /** @var CompletePurchaseRequest $request */
         /*$request = $this->gateway->completePurchase($this->parameters);

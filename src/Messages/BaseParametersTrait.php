@@ -227,6 +227,16 @@ trait BaseParametersTrait
         return $this->setParameter('authCode', $authCode);
     }
 
+    public function getMacValidationError(): ?string
+    {
+        return $this->getParameter('macValidationError');
+    }
+
+    public function setMacValidationError(string $macValidationError)
+    {
+        return $this->setParameter('macValidationError', $macValidationError);
+    }
+
     /**
      * @return string
      */
