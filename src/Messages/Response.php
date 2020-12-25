@@ -38,8 +38,8 @@ class Response extends AbstractResponse implements RedirectResponseInterface
      */
     public function isSuccessful(): bool
     {
-
-        return !(1 !== (int)$this->data['approved']);
+        $approved = isset($this->data['approved']) ? (int)$this->data['approved'] : 0;
+        return !(1 !== $approved);
     }
 
     /**
